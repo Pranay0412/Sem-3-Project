@@ -1,46 +1,23 @@
-# 🏠 PropertyPlus — Real Estate Management Web Application
+# 🏠 PropertyPlus — Real Estate Web Application
 
-PropertyPlus is a web-based real estate platform developed using **Flask (Python)** that allows users to buy, sell, and manage property listings efficiently.
-The system provides authentication, dashboards for buyers and sellers, property management tools, and automated email notifications.
+PropertyPlus is a web-based real estate management system developed using **Flask (Python)**.
+The application allows users to buy, sell, and manage property listings with features such as authentication, dashboards, and email notifications.
+
+This project was developed as part of a **college group project** to demonstrate full-stack web development concepts.
 
 ---
 
 ## 🚀 Features
 
-### 👤 User Authentication
-
-* User Signup & Login
-* OTP Verification via Email
-* Forgot Password & Reset
-* Profile Setup & Management
-
-### 🏘️ Property Management
-
-* Add, Edit, Delete Property Listings
-* Upload Images & Videos
-* Property Search & Filters
-* Property Details Viewer
-
-### 📊 Dashboards
-
-* Buyer Dashboard
-* Seller Dashboard
-* Leads Management
-* Property Analytics Tools
-
-### 📧 Email System
-
-* OTP Verification Emails
-* Welcome Emails
-* Interest Notifications
-* Price Drop Alerts
-* Password Update Notifications
-
-### 🛠️ Additional Tools
-
-* Property Calculators
-* Help & Support Section
-* Responsive UI Design
+* User Registration and Login
+* Email OTP Verification
+* Forgot Password System
+* Buyer and Seller Dashboards
+* Add, Edit, and Delete Property Listings
+* Upload Property Images and Videos
+* Property Search and View Details
+* Email Notifications using Flask-Mail
+* Responsive User Interface
 
 ---
 
@@ -48,9 +25,8 @@ The system provides authentication, dashboards for buyers and sellers, property 
 
 * **Backend:** Python, Flask
 * **Frontend:** HTML, CSS, JavaScript
-* **Database:** SQLite / SQL
+* **Database:** SQLite
 * **Email Service:** Flask-Mail (SMTP)
-* **Templating:** Jinja2
 * **Version Control:** Git & GitHub
 
 ---
@@ -60,17 +36,12 @@ The system provides authentication, dashboards for buyers and sellers, property 
 ```
 PropertyPlus/
 │── app/
-│   ├── routes/
-│   ├── models.py
-│   ├── data/
-│── static/
-│   ├── css/
-│   ├── js/
-│   ├── uploads/
 │── templates/
+│── static/
 │── config.py
 │── run.py
 │── requirements.txt
+│── .env.example
 ```
 
 ---
@@ -92,7 +63,7 @@ pip install -r requirements.txt
 
 ### 3️⃣ Environment Variables Setup
 
-Create a `.env` file in the root folder and add:
+Create a `.env` file in the root directory and add:
 
 ```
 MAIL_USERNAME=your_email@gmail.com
@@ -100,9 +71,11 @@ MAIL_PASSWORD=your_app_password
 SECRET_KEY=your_secret_key
 ```
 
-⚠️ Use Gmail **App Password**, not your actual Gmail password.
+You can copy `.env.example` and rename it to `.env`.
 
-### 4️⃣ Run the Application
+⚠️ Note: Use **Google App Password**, not your real Gmail password.
+
+### 4️⃣ Run the Project
 
 ```
 python run.py
@@ -116,44 +89,36 @@ http://127.0.0.1:5000
 
 ---
 
-## 🔐 Security Notes
-
-* Do not upload `.env` file to GitHub.
-* Store credentials securely.
-* Use environment variables for sensitive data.
-
----
-
 ## 👥 Contributors
 
-* Your Name
-* Collaborator Name(s)
+* Kanth Aayush    id :- https://github.com/ErAayushAI
+* Jain Pranay     id :- https://github.com/Pranay0412
+* Patel Vraj      id :- https://github.com/ervrajai
+---
+
+## 📜 Purpose
+
+This project is created for educational purposes to learn:
+
+* Flask Framework
+* Database Integration
+* Email Services
+* Web Development Workflow
+* Git & GitHub Collaboration
 
 ---
 
-## 📜 License
-
-This project is developed for educational purposes (college project).
-
----
-
-## 📸 Screenshots
-
-(Add screenshots of your project here if needed)
-
----
-
-## ✨ Future Enhancements
+## ✨ Future Improvements
 
 * Payment Integration
-* Advanced Search Filters
+* Advanced Property Filters
+* Deployment on Cloud Platform
 * Mobile App Version
-* Deployment on Cloud
 
 ---
 
-## 📧 Contact
+## ⭐ Acknowledgement
 
-For any queries or suggestions, feel free to contact the project contributors.
+We would like to thank our faculty and institution for guidance and support during the development of this project.
 
 ---
