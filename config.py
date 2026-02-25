@@ -25,7 +25,7 @@ class Config:
     DB_HOST = "localhost"
     DB_NAME = "propertyplus_db"
     DB_USER = "postgres"
-    DB_PASS = "admin"   # Change this according to your PostgreSQL password
+    DB_PASS = "Admin"   # Change this according to your PostgreSQL password
 
     # ------------------------------------------------------------------
     # Email Configuration (Used for OTP verification)
