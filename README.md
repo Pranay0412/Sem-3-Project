@@ -25,7 +25,7 @@ This project was developed as part of a **college group project** to demonstrate
 
 * **Backend:** Python, Flask
 * **Frontend:** HTML, CSS, JavaScript
-* **Database:** SQLite
+* **Database:** PostgreSQL
 * **Email Service:** Flask-Mail (SMTP)
 * **Version Control:** Git & GitHub
 
@@ -114,11 +114,8 @@ This project is created for educational purposes to learn:
 * Advanced Property Filters
 * Deployment on Cloud Platform
 * Mobile App Version
-
----
-
-## ⭐ Acknowledgement
-
-We would like to thank our faculty and institution for guidance and support during the development of this project.
-
+* AI Integration
+* Mobile Number OTP Verification
+* Legal document Support
+  
 ---
