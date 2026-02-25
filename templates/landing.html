@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<header class="navbar">
+  <div class="logo">
+    <div style="display: inline-flex; vertical-align: middle;">
+      {% include 'components/_prism_logo.html' %}
+    </div>
+    Property<span>Plus</span>
+  </div>
+
+  <div class="nav-right">
+    <div class="nav-extra">
+      <!-- Theme Toggle (First) -->
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark Mode">
+        <i class="fas fa-moon"></i>
+      </button>
+
+      <!-- Hamburger (Second) -->
+      <div class="hamburger" id="hamburger">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+
+    <nav class="nav-links" id="navLinks">
+      <div class="close-icon" id="closeNav">
+        <i class="fas fa-times"></i>
+      </div>
+      <a href="#home">Home</a>
+      <a href="#properties">Properties</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a href="/login" class="btn-signin">Sign In</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero-split" id="home">
+  <div class="container split-container">
+    <div class="hero-left">
+      <h1 class="hero-main-text">Find Your <span class="highlight">Perfect Home</span></h1>
+
+      <!-- Infinite Looping Animation Container -->
+      <div class="loop-text-wrapper">
+        <span class="static-prefix">We offer: </span>
+        <span class="typing-text-loop"></span><span class="cursor"></span>
+      </div>
+
+      <p class="hero-desc">Zero Brokerage. Verified Listings. Hassle-Free Experience.</p>
+
+      <a href="{{ url_for('auth.signup') }}" class="btn-primary mt-4">Get Started</a>
+    </div>
+    <div class="hero-right">
+      <img src="{{ url_for('static', filename='img/hero.png') }}" alt="Dream Home" class="hero-img">
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED PROPERTIES: 3D Carousel -->
+<section class="section-fresh" id="properties">
+  <div class="container">
+    <div class="section-header-fresh">
+      <h2>Featured Collections</h2>
+      <p>Swipe to explore our premium properties</p>
+    </div>
+
+    <!-- Dynamic Bootstrap 5 Carousel -->
+    <div id="propertyCarousel" class="carousel slide bs-carousel-container" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for prop in properties %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+          <div class="bs-slide-card">
+            <img src="{{ url_for('static', filename=prop.image) }}" class="d-block w-100" alt="{{ prop.title }}">
+            <div class="bs-slide-caption">
+              <h3>{{ prop.title }}</h3>
+              <p>{{ prop.location }}</p>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Controls -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ABOUT SECTION (Simple) -->
+<section class="section-fresh bg-light" id="about">
+  <div class="container center-text-container">
+    <h2>About PropertyPlus</h2>
+    <p class="lead-text">Redefining real estate with trust and transparency.</p>
+    <div class="clean-grid">
+      <div class="feature-box">
+        <i class="fas fa-home"></i>
+        <h4>Verified Listings</h4>
+        <p>Every home is physically verified by our team.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-wallet"></i>
+        <h4>Zero Brokerage</h4>
+        <p>Connect directly with owners. No hidden fees.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-shield-alt"></i>
+        <h4>Secure Deals</h4>
+        <p>100% transparent paperwork and legal support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT SECTION: Info Cards (No Form) -->
+<section class="section-fresh" id="contact">
+  <div class="container">
+    <div class="section-header-fresh">
+      <h2>Get In Touch</h2>
+      <p>We are here to help you find your dream home.</p>
+    </div>
+
+    <div class="contact-cards-grid">
+      <div class="contact-card-simple">
+        <div class="icon-circle">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <h3>Vraj Patel</h3>
+        <p>Founder & CEO</p>
+        <p>+91 7383958599</p>
+      </div>
+
+      <div class="contact-card-simple">
+        <div class="icon-circle">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <h3>Pranay Jain</h3>
+        <p>Head of Sales</p>
+        <p>+91 9265705534</p>
+      </div>
+
+      <div class="contact-card-simple">
+        <div class="icon-circle">
+          <i class="fas fa-user-tie"></i>
+        </div>
+        <h3>Kanth Aayush</h3>
+        <p>Customer Relations</p>
+        <p>+91 9408987800</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

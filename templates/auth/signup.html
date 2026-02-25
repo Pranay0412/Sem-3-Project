@@ -1,0 +1,369 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="auth-container">
+  <div class="auth-overlay"></div>
+  <div class="auth-box">
+    <div style="margin-bottom: 30px">
+      <div style="
+          font-size: 28px;
+          font-weight: 700;
+          color: var(--auth-text-color); /* Changed from white to variable */
+          margin-bottom: 10px;
+        ">
+        Property<span style="color: var(--button-color)">Plus</span>
+      </div>
+      <p class="auth-subtitle">
+        Join our exclusive network of buyers and sellers today.
+      </p>
+    </div>
+
+    <div id="email-step">
+      <div class="floating-group">
+        <input type="email" id="email" placeholder=" " onkeyup="clearError('emailError')" />
+        <label for="email">Email Address</label>
+        <small id="emailError" class="text-danger"></small>
+      </div>
+
+      <button id="btn-get-otp" class="btn-primary full-width" onclick="sendOTP()">
+        Get OTP
+      </button>
+
+      <p class="auth-text" style="color: var(--auth-subtext-color); margin-top: 20px">
+        Already have an account?
+        <a href="{{ url_for('auth.login') }}"
+          style="color: var(--auth-text-color); text-decoration: underline; font-weight: 600">
+          Sign In
+        </a>
+      </p>
+    </div>
+
+    <div id="otp-step" style="display: none">
+      <div class="otp-wrapper">
+        <div class="otp-message">
+          <div class="otp-message-title">We’ve sent a verification code to your email</div>
+          <div class="otp-message-sub">Sent to <span id="masked-email" class="otp-email">your email</span></div>
+        </div>
+
+        <label class="otp-label">Enter 6-digit OTP</label>
+
+        <div class="otp-row" role="group" aria-label="6-digit OTP input">
+          <input class="otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" aria-label="Digit 1" />
+          <input class="otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" aria-label="Digit 2" />
+          <input class="otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" aria-label="Digit 3" />
+          <input class="otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" aria-label="Digit 4" />
+          <input class="otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" aria-label="Digit 5" />
+          <input class="otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" aria-label="Digit 6" />
+        </div>
+
+        <small id="otpError" class="text-danger"></small>
+      </div>
+
+      <button id="btn-verify-otp" class="btn-primary full-width" onclick="verifyOTP()">
+        Verify OTP
+      </button>
+
+      <p class="auth-text" style="color: var(--auth-subtext-color); margin-top: 15px">
+        Didn't receive code? <br />
+        <a id="resend-link" class="disabled" onclick="resendOTP()"
+          style="cursor: pointer; color: var(--button-color);">Resend OTP</a>
+        <span id="timer-text" style="color: var(--auth-subtext-color)">in 00:30</span>
+      </p>
+    </div>
+
+    <div id="details-step" style="display: none">
+      <div id="step1">
+        <div class="floating-group">
+          <input type="text" id="username" placeholder=" " />
+          <label for="username">Choose a Username</label>
+          <small id="usernameError"></small>
+        </div>
+
+        <div class="floating-group">
+          <input type="password" id="password" placeholder=" " />
+          <label for="password">Create Password</label>
+          <i class="fas fa-eye password-toggle" onclick="togglePassword('password', this)"
+            style="color: var(--auth-subtext-color)"></i>
+        </div>
+
+        <div id="password-criteria" style="margin-bottom: 20px; font-size: 13px; color: var(--auth-subtext-color)">
+          <p style="margin-bottom: 5px">Password must contain:</p>
+          <span id="crit-len" style="margin-right: 10px">❌ 8+ Chars</span>
+          <span id="crit-num" style="margin-right: 10px">❌ Number</span>
+          <span id="crit-spec" style="margin-right: 10px">❌ Special Char (@#$%)</span>
+        </div>
+
+        <div class="floating-group">
+          <input type="password" id="confirmPassword" placeholder=" " />
+          <label for="confirmPassword">Confirm Password</label>
+          <i class="fas fa-eye password-toggle" onclick="togglePassword('confirmPassword', this)"
+            style="color: var(--auth-subtext-color)"></i>
+          <small id="passwordMatchError" class="text-danger" style="display: none">Passwords do not match</small>
+        </div>
+
+        <button id="btn-step1-next" onclick="goToStep2()" class="btn-primary full-width">
+          Next
+        </button>
+      </div>
+
+      <div id="step2" style="display: none">
+        <div style="display: flex; gap: 15px">
+          <div class="floating-group" style="flex: 1">
+            <input type="text" id="firstName" placeholder=" " onkeyup="clearError('nameError')" />
+            <label for="firstName">First Name</label>
+          </div>
+
+          <div class="floating-group" style="flex: 1">
+            <input type="text" id="lastName" placeholder=" " onkeyup="clearError('nameError')" />
+            <label for="lastName">Last Name</label>
+          </div>
+        </div>
+        <small id="nameError" class="text-danger" style="margin-top: -15px; margin-bottom: 15px"></small>
+
+        <div class="floating-group prefix-group">
+          <span class="input-prefix" style="color: var(--auth-text-color)">+91</span>
+          <input type="tel" id="whatsapp" placeholder=" " maxlength="10"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '')" onkeyup="clearError('whatsappError')" />
+          <label for="whatsapp">Contact Number</label>
+          <small id="whatsappError" class="text-danger"></small>
+        </div>
+
+        <button id="btn-step2-next" onclick="goToStep3()" class="btn-primary full-width">
+          Next
+        </button>
+      </div>
+
+      <div id="step3" style="display: none">
+        <div class="floating-group">
+          <select id="gender" required onchange="clearError('genderError')">
+            <option value="" disabled selected></option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          <label for="gender">Gender</label>
+          <small id="genderError" class="text-danger"></small>
+        </div>
+
+        <!-- NEW: State & City -->
+        <div style="display: flex; gap: 15px; margin-top: 15px;">
+          <div class="floating-group" style="flex: 1">
+            <select id="state" required>
+              <option value="" disabled selected></option>
+              {% for state_name in states %}
+              <option value="{{ state_name }}">{{ state_name }}</option>
+              {% endfor %}
+            </select>
+            <label for="state">State</label>
+          </div>
+
+          <div class="floating-group" style="flex: 1">
+            <select id="city" required disabled>
+              <option value="" disabled selected></option>
+              <!-- Populated by JS -->
+            </select>
+            <label for="city">City</label>
+          </div>
+        </div>
+        
+        <!-- NEW: Date of Birth -->
+         <div class="floating-group" style="margin-top: 15px;">
+            <input type="date" id="dob" placeholder=" " onchange="this.classList.add('has-value')" />
+            <label for="dob">Date of Birth</label>
+            <small id="dobError" class="text-danger"></small>
+         </div>
+
+        <div style="margin-top: 20px; margin-bottom: 20px">
+          <label style="
+              font-size: 14px;
+              font-weight: 600;
+              color: var(--auth-subtext-color);
+              display: block;
+              margin-bottom: 10px;
+            ">
+            I want to:
+          </label>
+
+          <div style="display: flex; gap: 20px; color: var(--auth-text-color)">
+            <label style="
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+              ">
+              <input type="radio" name="role" value="Buyer"
+                style="accent-color: var(--button-color); margin-right: 8px" />
+              Buy Property
+            </label>
+            <label style="
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+              ">
+              <input type="radio" name="role" value="Seller"
+                style="accent-color: var(--button-color); margin-right: 8px" />
+              Sell Property
+            </label>
+          </div>
+          <small id="roleError" class="text-danger"></small>
+        </div>
+
+        <button id="btn-step3-next" onclick="goToStep4()" class="btn-primary full-width">
+          Next
+        </button>
+      </div>
+
+      <div id="step4" style="display: none">
+        <div style="text-align: left; margin-bottom: 25px;">
+          <label
+            style="color: var(--auth-subtext-color); display: block; margin-bottom: 15px; font-size: 14px; font-weight: 600;">
+            Personalize Your Profile
+          </label>
+
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <!-- Profile Preview with Edit Overlay -->
+            <div
+              style="position: relative; width: 85px; height: 85px; border-radius: 50%; overflow: hidden; border: 2px solid var(--button-color); box-shadow: var(--shadow-soft);">
+              <img id="avatarPreview" src="" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+              <label for="profile_image"
+                style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 10px; text-align: center; padding: 2px 0; cursor: pointer; backdrop-filter: blur(2px);">
+                <i class="fas fa-camera"></i>
+              </label>
+            </div>
+
+            <div style="flex: 1;">
+              <p style="color: var(--auth-text-color); font-weight: 600; margin-bottom: 5px; font-size: 15px;">Profile
+                Picture</p>
+              <p style="color: var(--auth-subtext-color); font-size: 12px; line-height: 1.4;">
+                Upload a professional photo or choose a color for your initial avatar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="floating-group" style="margin-top: 10px;">
+          <input type="file" id="profile_image" accept="image/*" class="form-control"
+            style="padding-top: 15px; opacity: 0; position: absolute; inset: 0; z-index: 20; cursor: pointer;">
+          <div
+            style="padding: 14px 16px; border: 1px dashed var(--auth-border); border-radius: 6px; background: rgba(128,128,128,0.05); color: var(--auth-subtext-color); font-size: 14px; pointer-events: none;">
+            <i class="fas fa-upload" style="margin-right: 10px;"></i>
+            <span id="file-name-display">Choose Image...</span>
+          </div>
+          <label
+            style="top: 0; transform: translateY(-50%); font-size: 12px; font-weight: 700; color: var(--button-color); background: var(--auth-glass-bg); padding: 0 6px;">Profile
+            Image</label>
+        </div>
+
+        <div style="margin-bottom: 30px; margin-top: 10px;">
+          <label
+            style="color: var(--auth-subtext-color); display: block; margin-bottom: 12px; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Or
+            Choose Identity Color</label>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 10px;">
+              <!-- Preset Color Options -->
+              <label class="color-swatch-wrapper">
+                <input type="radio" name="avatar_color" value="1f2a44" checked style="display: none;">
+                <div class="color-swatch" style="background: #1f2a44; --swatch-color: #1f2a44;"></div>
+              </label>
+
+              <label class="color-swatch-wrapper">
+                <input type="radio" name="avatar_color" value="6d28d9" style="display: none;">
+                <div class="color-swatch" style="background: #6d28d9; --swatch-color: #6d28d9;"></div>
+              </label>
+
+              <label class="color-swatch-wrapper">
+                <input type="radio" name="avatar_color" value="0ea5a4" style="display: none;">
+                <div class="color-swatch" style="background: #0ea5a4; --swatch-color: #0ea5a4;"></div>
+              </label>
+
+              <label class="color-swatch-wrapper">
+                <input type="radio" name="avatar_color" value="f43f5e" style="display: none;">
+                <div class="color-swatch" style="background: #f43f5e; --swatch-color: #f43f5e;"></div>
+              </label>
+            </div>
+
+            <!-- Custom Color Picker -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label style="font-size: 12px; color: var(--auth-subtext-color); white-space: nowrap;">Custom color</label>
+              <div
+                style="display: inline-flex; align-items: center; padding: 2px; border-radius: 999px; background: linear-gradient(135deg, #f43f5e, #f97316, #22c55e, #3b82f6, #8b5cf6);">
+                <div
+                  style="background: var(--auth-glass-bg); border-radius: 999px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px;">
+                  <input type="color" id="avatar_custom_color" value="#1f2a44"
+                    style="width: 32px; height: 24px; padding: 0; border-radius: 6px; border: none; background: transparent; cursor: pointer;">
+                  <span
+                    style="font-size: 11px; color: var(--auth-text-color); text-transform: uppercase; letter-spacing: 0.5px;">Pick</span>
+                </div>
+              </div>
+              <!-- Hidden radio that will hold the picked hex (without #) -->
+              <input type="radio" id="avatar_color_custom" name="avatar_color" value="1f2a44" style="display: none;">
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-create-account" onclick="createAccount()" class="btn-primary full-width"
+          style="padding: 16px; font-weight: 700; letter-spacing: 1px;">
+          Complete Registration
+        </button>
+      </div>
+
+      <style>
+        .color-swatch-wrapper {
+          cursor: pointer;
+          transition: transform 0.2s ease;
+        }
+
+        .color-swatch-wrapper:hover {
+          transform: scale(1.1);
+        }
+
+        .color-swatch {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          /* Square with rounded corners for modern look */
+          border: 2px solid transparent;
+          transition: all 0.3s ease;
+          position: relative;
+        }
+
+        input[name="avatar_color"]:checked+.color-swatch {
+          border-color: var(--button-color);
+          box-shadow: 0 0 15px var(--swatch-color);
+          transform: scale(1.1);
+        }
+
+        input[name="avatar_color"]:checked+.color-swatch::after {
+          content: "\f00c";
+          font-family: "Font Awesome 5 Free";
+          font-weight: 900;
+          color: white;
+          font-size: 12px;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      </style>
+      <script>
+        // Simple wiring for custom color picker -> avatar_color radio + preview
+        (function () {
+          const colorInput = document.getElementById('avatar_custom_color');
+          const customRadio = document.getElementById('avatar_color_custom');
+
+          if (!colorInput || !customRadio) return;
+
+          colorInput.addEventListener('input', function () {
+            // Strip leading "#" so it matches existing values like "1f2a44"
+            const hex = (this.value || '').replace('#', '');
+            if (!hex) return;
+            customRadio.value = hex;
+            customRadio.checked = true;
+            // Trigger existing listeners in auth.js to update preview
+            customRadio.dispatchEvent(new Event('change'));
+          });
+        })();
+      </script>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

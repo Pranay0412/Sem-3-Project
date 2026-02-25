@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="auth-container">
+  <div class="auth-overlay"></div> <form class="auth-box" method="post" action="{{ url_for('auth.login') }}">
+
+    <div style="margin-bottom: 40px">
+      <div style="font-size: 28px; font-weight: 700; color: var(--auth-text-color); margin-bottom: 10px;">
+        Property<span style="color: var(--button-color)">Plus</span>
+      </div>
+    </div>
+
+    <h2>Welcome Back</h2> 
+    
+    <p class="auth-subtitle">
+      Enter your details to access your dashboard.
+    </p>
+
+    <div class="floating-group">
+      <input type="text" id="login-user" name="username" placeholder=" " required />
+      <label for="login-user">Username or Email</label>
+    </div>
+
+    <div class="floating-group">
+      <input type="password" name="password" id="login-pass" placeholder=" " required />
+      <label for="login-pass">Password</label>
+      <i class="fas fa-eye password-toggle" onclick="togglePassword('login-pass', this)" style="color: var(--auth-subtext-color);"></i>
+    </div>
+
+    <div style="text-align: right; margin-bottom: 15px;">
+      <a href="{{ url_for('auth.forgot_password') }}" style="color: var(--auth-subtext-color); font-size: 14px; text-decoration: none;">
+        Forgot Password?
+      </a>
+    </div>
+
+    <button type="submit" id="btn-login" class="btn-primary full-width">
+      Sign In
+    </button>
+
+    <p class="auth-text" style="color: var(--auth-subtext-color)">
+      Don’t have an account?
+      <a href="{{ url_for('auth.signup') }}" style="color: var(--auth-text-color); text-decoration: underline; font-weight: 600;">
+        Create one
+      </a>
+    </p>
+  </form>
+</div>
+
+{% endblock %}

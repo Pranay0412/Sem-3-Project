@@ -1,0 +1,881 @@
+<div class="pp-card profile-card" style="padding: 0; overflow: hidden; border: none; background: transparent;">
+
+    <!-- Profile Header / Banner Area -->
+    <div class="profile-banner">
+        <div class="profile-header-container">
+            <!-- LEFT: Avatar & Edit Button -->
+            <div class="profile-avatar-wrapper">
+                <div class="avatar-circle">
+                    {% if session.user.profile_image and session.user.profile_image.startswith('http') %}
+                    <img id="profileAvatar" src="{{ session.user.profile_image }}" alt="Profile">
+                    {% elif session.user.profile_image %}
+                    <img id="profileAvatar"
+                        src="{{ url_for('static', filename='uploads/' + session.user.profile_image) }}" alt="Profile">
+                    {% else %}
+                    <img id="profileAvatar"
+                        src="https://ui-avatars.com/api/?name={{ session.user.full_name }}&background=1f2a44&color=fff&size=256"
+                        alt="Profile">
+                    {% endif %}
+                </div>
+                <button type="button" onclick="toggleEditAvatar()" class="btn-edit-avatar-mini" title="Edit Avatar">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+
+            <!-- RIGHT: User Info -->
+            <div class="profile-info-wrapper">
+                <div class="profile-name-row">
+                    <h1 class="profile-banner-name">{{ session.user.full_name }}</h1>
+                    <div class="role-badge-container desktop-role">
+                        {% if session.user.role == 'Buyer' %}
+                        <span class="role-badge buyer">BUYER</span>
+                        {% else %}
+                        <span class="role-badge seller">SELLER</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <p class="profile-banner-handle">@{{ session.user.username }}</p>
+                <div class="role-badge-container mobile-role">
+                    {% if session.user.role == 'Buyer' %}
+                    <span class="role-badge buyer">BUYER</span>
+                    {% else %}
+                    <span class="role-badge seller">SELLER</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Avatar Section (Using same color logic as steps) -->
+    <div id="editAvatarSection"
+        style="display: none; background: var(--card); padding: 20px;border-radius: 16px 16px; border-bottom: 1px solid var(--border); animation: slideDown 0.3s ease;">
+        <h6 style="color: var(--text); margin-bottom: 15px; font-weight: 700;">Update Profile Picture</h6>
+
+        <div class="row g-3 align-items-center">
+            <!-- Option A: Upload -->
+            <div class="col-md-5">
+                <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px;">Upload
+                    Image</label>
+                <label for="profileImgInput" class="btn btn-outline-primary btn-sm w-100"
+                    style="border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-cloud-upload-alt me-2"></i> Choose File
+                </label>
+                <input type="file" id="profileImgInput" accept="image/*" style="display: none;"
+                    onchange="previewFileImage(this)">
+            </div>
+
+            <div class="col-md-1 text-center text-muted" style="font-size: 12px;">OR</div>
+
+            <!-- Option B: Choose Color -->
+            <div class="col-md-6">
+                <label style="font-size: 12px; color: var(--muted); display: block; margin-bottom: 8px;">Pick
+                    Color</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+
+                    <!-- Native Picker -->
+                    <div class="color-picker-wrapper"
+                        style="position: relative; width: 32px; height: 32px; overflow: hidden; border-radius: 50%; border: 2px solid var(--border); cursor: pointer;">
+                        <input type="color" id="nativeColorPicker" onchange="selectAvatarColor(this.value)"
+                            style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; cursor: pointer; padding: 0; border: none;">
+                    </div>
+
+                    <!-- Separator -->
+                    <div style="width: 1px; height: 20px; background: var(--border); margin: 0 5px;"></div>
+
+                    <!-- Preset Colors -->
+                    {% set colors = ['1f2a44', '6d28d9', '0ea5a4', 'f43f5e', 'f59e0b'] %}
+                    {% for c in colors %}
+                    <div onclick="selectAvatarColor('{{ c }}')" class="color-option avatar-color-option"
+                        data-color="{{ c }}" style="background-color: #{{ c }};">
+                    </div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" id="selectedAvatarColor">
+            </div>
+        </div>
+
+        <div style="margin-top: 15px; text-align: right;">
+            <button onclick="toggleEditAvatar()" class="btn btn-sm btn-outline-secondary me-2">Cancel</button>
+            <button onclick="saveProfileAvatar()" class="btn btn-sm btn-primary">Save Changes</button>
+        </div>
+    </div>
+
+
+    <!-- Profile Details Table View -->
+    <div style="background: var(--card); padding: 40px; border-radius: 16px 16px; box-shadow: var(--shadow-md);">
+        <h5
+            style="margin-bottom: 30px; color: var(--text); font-weight: 800; display: flex; align-items: center; gap: 12px; font-size: 1.15rem; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+            <i class="fas fa-id-card" style="color: var(--button-color);"></i>
+            Account Overview
+        </h5>
+
+        <div class="profile-details-table">
+            <!-- Row: Email -->
+            <div class="table-row stripe">
+                <div class="table-label">
+                    <i class="fas fa-envelope"></i> Email
+                </div>
+                <div class="table-value">
+                    {{ session.user.email }}
+                </div>
+            </div>
+
+            <!-- Row: Mobile -->
+            <div class="table-row">
+                <div class="table-label">
+                    <i class="fas fa-phone"></i> Mobile
+                </div>
+                <div class="table-value" style="justify-content: space-between; width: 100%;">
+                    <span>{{ session.user.contact_number }}</span>
+                    <button class="btn-edit-profile-field" onclick="openEditProfileModal('mobile')" title="Edit Mobile Number">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Row: Address -->
+            <div class="table-row stripe">
+                <div class="table-label">
+                    <i class="fas fa-map-marker-alt"></i> Address
+                </div>
+                <div class="table-value" style="justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <img src="https://flagcdn.com/in.svg" width="22" style="border-radius: 2px;" alt="IN">
+                        <span>
+                            {% if session.user.city %}{{ session.user.city }}, {% endif %}
+                            {% if session.user.state %}{{ session.user.state }}{% else %}Not Set{% endif %}
+                        </span>
+                    </div>
+                    <button class="btn-edit-profile-field" onclick="openEditProfileModal('address')" title="Edit Address">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Row: DOB -->
+            <div class="table-row">
+                <div class="table-label">
+                    <i class="fas fa-birthday-cake"></i> Birth Date
+                </div>
+                <div class="table-value">
+                    {% if session.user.dob %}
+                    {% set dob_parts = session.user.dob.split(' ') %}
+                    {% if dob_parts|length > 4 %}
+                    {{ dob_parts[1] }} {{ dob_parts[2] }} {{ dob_parts[3] }}
+                    {% else %}
+                    {{ session.user.dob }}
+                    {% endif %}
+                    {% else %}
+                    Not Set
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Row: Gender -->
+            <div class="table-row stripe">
+                <div class="table-label">
+                    <i class="fas fa-venus-mars"></i> Gender
+                </div>
+                <div class="table-value">
+                    {{ session.user.gender }}
+                </div>
+            </div>
+
+            <!-- Row: Joined -->
+            <div class="table-row">
+                <div class="table-label">
+                    <i class="fas fa-clock"></i> Joined On
+                </div>
+                <div class="table-value">
+                    {{ session.user.created_at }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .profile-banner {
+            padding: 40px 30px;
+            border-radius: 16px 16px 0 0;
+            background: var(--bg);
+            transition: background 0.3s ease;
+        }
+
+        .profile-header-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .profile-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .avatar-circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--bg);
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            background: #fff;
+        }
+
+        .avatar-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-edit-avatar-mini {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--button-color);
+            color: white;
+            border: 2px solid var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-edit-avatar-mini:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .profile-name-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .profile-banner-name {
+            margin: 0;
+            font-weight: 800;
+            font-size: 1.85rem;
+            letter-spacing: -0.5px;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .profile-banner-handle {
+            margin: 0;
+            font-size: 14px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .role-badge {
+            padding: 4px 12px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-badge.buyer {
+            background: #6203af;
+            color: white;
+            box-shadow: 0 2px 4px rgba(98, 3, 175, 0.3);
+        }
+
+        .role-badge.seller {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+        }
+
+        .desktop-role {
+            display: block;
+        }
+
+        .mobile-role {
+            display: none;
+        }
+
+        .profile-details-table {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-row {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row.stripe {
+            background: rgba(0, 0, 0, 0.015);
+        }
+
+        .table-label {
+            width: 180px;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.025);
+            font-weight: 700;
+            color: var(--muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .table-label i {
+            width: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--button-color);
+        }
+
+        .table-value {
+            flex: 1;
+            padding: 15px 20px;
+            color: var(--text);
+            font-weight: 500;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .profile-info-wrapper {
+                align-items: center;
+            }
+
+            .profile-name-row {
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .table-row {
+                flex-direction: column;
+            }
+
+            .table-label {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 10px 20px;
+            }
+
+            .table-value {
+                padding: 15px 20px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .profile-banner-name {
+                font-size: 1.5rem;
+            }
+
+            .desktop-role {
+                display: none;
+            }
+
+            .mobile-role {
+                display: block;
+                margin-top: 8px;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        [data-theme="dark"] .profile-banner {
+            background: var(--bg);
+        }
+
+        [data-theme="dark"] .profile-banner-name {
+            color: white;
+        }
+
+        [data-theme="dark"] .profile-banner-handle {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        [data-theme="dark"] .table-row.stripe {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        [data-theme="dark"] .table-label {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .avatar-color-option {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        /* Edit Profile Modal Styles */
+        .btn-edit-profile-field {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 10px;
+        }
+
+        .btn-edit-profile-field:hover {
+            background: var(--button-color);
+            color: white;
+            border-color: var(--button-color);
+            transform: scale(1.05);
+        }
+
+        .profile-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .profile-modal-container {
+            background: var(--card);
+            width: 90%;
+            max-width: 450px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .profile-modal-header {
+            padding: 20px 25px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .profile-modal-header h4 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .profile-modal-body {
+            padding: 25px;
+        }
+
+        .profile-modal-footer {
+            padding: 20px 25px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .profile-field-group {
+            margin-bottom: 20px;
+        }
+
+        .profile-field-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .profile-input-wrapper {
+            position: relative;
+        }
+
+        .profile-input-wrapper input,
+        .profile-input-wrapper select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .profile-input-wrapper input:focus,
+        .profile-input-wrapper select:focus {
+            outline: none;
+            border-color: var(--button-color);
+            box-shadow: 0 0 0 3px rgba(var(--button-color-rgb), 0.1);
+        }
+
+        .profile-input-prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 700;
+            color: var(--text);
+            pointer-events: none;
+        }
+
+        .has-prefix input {
+            padding-left: 55px;
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .password-toggle-icon:hover {
+            color: var(--button-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+
+    <!-- Update Profile Modal -->
+    <div id="profileEditModal" class="profile-modal-overlay">
+        <div class="profile-modal-container">
+            <div class="profile-modal-header">
+                <h4 id="profileModalTitle">Edit Profile</h4>
+                <button onclick="closeEditProfileModal()" style="background:transparent; border:none; color:var(--muted); font-size:24px; cursor:pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="profile-modal-body">
+                <!-- Mobile Section -->
+                <div id="mobileEditSection" style="display:none;">
+                    <div class="profile-field-group">
+                        <label>Mobile Number</label>
+                        <div class="profile-input-wrapper has-prefix">
+                            <span class="profile-input-prefix">+91</span>
+                            <input type="tel" id="newMobileInput" maxlength="10" 
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                   onblur="validateMobileInput(this.value)"
+                                   placeholder="Enter 10 digit number">
+                        </div>
+                        <small id="mobileError" style="color:#ef4444; font-size:12px; display:none; margin-top:5px;">Please enter a valid 10-digit number</small>
+                    </div>
+                </div>
+
+                <!-- Address Section -->
+                <div id="addressEditSection" style="display:none;">
+                    <div class="profile-field-group">
+                        <label>State</label>
+                        <div class="profile-input-wrapper">
+                            <select id="newStateSelect" onchange="loadCitiesForModal(this.value)">
+                                <option value="" disabled selected>Select State</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="profile-field-group">
+                        <label>City</label>
+                        <div class="profile-input-wrapper">
+                            <select id="newCitySelect" disabled>
+                                <option value="" disabled selected>Select City</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Confirmation (Shared) -->
+                <div class="profile-field-group" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <label>Confirm Password</label>
+                    <div class="profile-input-wrapper">
+                        <input type="password" id="confirmPasswordInput" placeholder="Enter your password to confirm">
+                        <i class="fas fa-eye password-toggle-icon" onclick="toggleModalPassword()"></i>
+                    </div>
+                    <small id="passwordError" style="color:#ef4444; font-size:12px; display:none; margin-top:5px;">Incorrect password</small>
+                </div>
+            </div>
+            <div class="profile-modal-footer">
+                <button class="btn btn-outline-secondary" onclick="closeEditProfileModal()" style="border-radius:10px; font-weight:600; padding:10px 20px;">Cancel</button>
+                <button class="btn btn-primary" id="saveProfileBtn" onclick="saveProfileChanges()" style="border-radius:10px; font-weight:700; padding:10px 25px;">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editType = '';
+        let statesData = [];
+
+        // Load states on init
+        async function fetchStates() {
+            try {
+                const response = await fetch('/signup'); // This is a bit hacky, but auth.signup.html has states
+                // Better approach: create a separate API or use the one used in signup
+                const statesRes = await fetch('/api/cities/Tamil%20Nadu'); // Just to test API
+                // Let's use the actual states from the session or templates
+            } catch(e) {}
+        }
+
+        // Initialize state dropdown in modal
+        const modalStatesList = [
+            {% for state_name in states %} "{{ state_name }}", {% endfor %}
+            {% if not states %}
+                "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal", "Delhi", "Chandigarh"
+            {% endif %}
+        ];
+
+        function populateModalStates() {
+            const stateSelect = document.getElementById('newStateSelect');
+            if (stateSelect.options.length > 1) return;
+            
+            modalStatesList.sort().forEach(state => {
+                const opt = document.createElement('option');
+                opt.value = state;
+                opt.textContent = state;
+                stateSelect.appendChild(opt);
+            });
+        }
+
+        async function loadCitiesForModal(state) {
+            const citySelect = document.getElementById('newCitySelect');
+            citySelect.disabled = true;
+            citySelect.innerHTML = '<option value="" disabled selected>Loading...</option>';
+            
+            try {
+                const response = await fetch(`/api/cities/${encodeURIComponent(state)}`);
+                const cities = await response.json();
+                
+                citySelect.innerHTML = '<option value="" disabled selected>Select City</option>';
+                cities.sort().forEach(city => {
+                    const opt = document.createElement('option');
+                    opt.value = city;
+                    opt.textContent = city;
+                    citySelect.appendChild(opt);
+                });
+                citySelect.disabled = false;
+            } catch (e) {
+                citySelect.innerHTML = '<option value="" disabled selected>Error loading cities</option>';
+            }
+        }
+
+        function openEditProfileModal(type) {
+            editType = type;
+            const modal = document.getElementById('profileEditModal');
+            const title = document.getElementById('profileModalTitle');
+            const mobileSection = document.getElementById('mobileEditSection');
+            const addressSection = document.getElementById('addressEditSection');
+            
+            // Reset modal
+            document.getElementById('mobileError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('confirmPasswordInput').value = '';
+            
+            if (type === 'mobile') {
+                title.textContent = 'Change Mobile Number';
+                mobileSection.style.display = 'block';
+                addressSection.style.display = 'none';
+                // Set current value
+                const currentMobile = "{{ session.user.contact_number }}".replace('+91', '');
+                document.getElementById('newMobileInput').value = currentMobile;
+            } else {
+                title.textContent = 'Update Address';
+                mobileSection.style.display = 'none';
+                addressSection.style.display = 'block';
+                populateModalStates();
+                // Select current state/city if possible
+                const currentState = "{{ session.user.state }}";
+                const currentCity = "{{ session.user.city }}";
+                if (currentState) {
+                    document.getElementById('newStateSelect').value = currentState;
+                    loadCitiesForModal(currentState).then(() => {
+                        if (currentCity) document.getElementById('newCitySelect').value = currentCity;
+                    });
+                }
+            }
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeEditProfileModal() {
+            document.getElementById('profileEditModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleModalPassword() {
+            const pwdInput = document.getElementById('confirmPasswordInput');
+            const icon = event.target.closest('.password-toggle-icon'); 
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function validateMobileInput(val) {
+            const errorEl = document.getElementById('mobileError');
+            if (val.length > 0 && val.length !== 10) {
+                errorEl.style.display = 'block';
+                return false;
+            } else {
+                errorEl.style.display = 'none';
+                return true;
+            }
+        }
+
+        async function saveProfileChanges() {
+            const saveBtn = document.getElementById('saveProfileBtn');
+            const password = document.getElementById('confirmPasswordInput').value;
+            const passwordError = document.getElementById('passwordError');
+            
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                passwordError.style.display = 'block';
+                return;
+            }
+
+            let updateData = {
+                password: password,
+                contact_number: "{{ session.user.contact_number }}",
+                city: "{{ session.user.city or '' }}",
+                state: "{{ session.user.state or '' }}"
+            };
+
+            if (editType === 'mobile') {
+                const mobile = document.getElementById('newMobileInput').value;
+                if (!validateMobileInput(mobile) || mobile.length === 0) {
+                    document.getElementById('mobileError').style.display = 'block';
+                    return;
+                }
+                updateData.contact_number = '+91' + mobile;
+            } else {
+                const city = document.getElementById('newCitySelect').value;
+                const state = document.getElementById('newStateSelect').value;
+                if (!city || !state) {
+                    showProfileAlert('Required', 'Please select both state and city', 'info');
+                    return;
+                }
+                updateData.city = city;
+                updateData.state = state;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+
+            try {
+                const response = await fetch('/api/update-profile-details', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updateData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    closeEditProfileModal();
+                    // Using global toast system for proper theme style
+                    if (typeof createGlobalToast === 'function') {
+                        createGlobalToast('Profile updated', 'success');
+                    } else {
+                        showProfileAlert('Success', 'Profile updated', 'success');
+                    }
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    passwordError.textContent = result.message;
+                    passwordError.style.display = 'block';
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save Changes';
+                }
+            } catch (e) {
+                createGlobalToast('An error occurred. Please try again.', 'error');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save Changes';
+            }
+        }
+
+        function showProfileAlert(title, message, type) {
+            // Branded Toast Fallback
+            if (typeof createGlobalToast === 'function') {
+                createGlobalToast(message, type);
+            } else {
+                alert(message);
+            }
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('profileEditModal');
+            if (event.target == modal) {
+                closeEditProfileModal();
+            }
+        }
+    </script>
+</div>

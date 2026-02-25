@@ -1,0 +1,30 @@
+    <div class="modal fade" id="cancelPropertyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="background: var(--card); color: var(--text); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                <div class="modal-header border-0 pb-0" style="padding: 24px 24px 10px;">
+                    <h5 class="modal-title fw-bold" style="font-size: 1.25rem;">Cancel Progress?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="padding: 10px 24px 24px;">
+                    <div class="text-center mb-4">
+                        <div
+                            style="width: 60px; height: 60px; background: rgba(244, 91, 105, 0.1); color: #f45b69; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <p class="mb-0" style="opacity: 0.9; font-size: 0.95rem;">Are you sure you want to cancel? All
+                            information entered so far will be <strong style="color: #f45b69;">permanently
+                                lost</strong>.</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0" style="padding: 0 24px 24px; gap: 12px;">
+                    <button type="button" class="btn btn-secondary flex-grow-1" data-bs-dismiss="modal"
+                        style="border-radius: 12px; padding: 10px; font-weight: 500; background: var(--bg); border: 1px solid var(--border); color: var(--text);">No,
+                        Stay</button>
+                    <button type="button" id="confirmCancelBtn" class="btn btn-danger flex-grow-1"
+                        style="border-radius: 12px; padding: 10px; font-weight: 500; background: #f45b69; border: none; color: white;">Yes,
+                        Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,176 @@
+<!-- PROPERTY DETAILS POPUP MODAL -->
+<div class="modal fade" id="ppPropertyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered pp-prop-modal-dialog">
+        <div class="modal-content pp-prop-modal-content">
+            <!-- Close Button -->
+            <div class="pp-modal-actions">
+                <button type="button" class="pp-action-btn pp-close-btn" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="modal-body p-0" id="propModalLoading">
+                <div class="p-5 text-center">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-3">Loading details...</p>
+                </div>
+            </div>
+
+            <div class="modal-body p-0 d-none" id="propModalContent">
+                <!-- 1. Top Images Grid -->
+                <div id="propertyCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" id="modalCarouselInner">
+                        <!-- Dynamic Carousel Items via JS -->
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <!-- Media Buttons (Only if available) -->
+                <div class="pp-media-toolbar d-none" id="modalMediaToolbar">
+                    <button class="pp-media-btn" id="btnViewVideo" style="display: none;">
+                        <i class="fas fa-video"></i> Property Video
+                    </button>
+                    <button class="pp-media-btn" id="btnViewFloorPlan" style="display: none;">
+                        <i class="fas fa-ruler-combined"></i> Floor Plan
+                    </button>
+                </div>
+
+                <!-- 2. Basic Info Section -->
+                <div class="pp-modal-header-info">
+                    <!-- Title -->
+                    <h2 id="modalTitle" class="pp-modal-title">--</h2>
+
+                    <!-- Location & Listing Type -->
+                    <div class="pp-modal-meta-row">
+                        <span id="modalLocation" class="pp-location-badge"><i class="fas fa-map-marker-alt"></i> --, --</span>
+                        <span id="modalListingCapsule" class="pp-status-capsule">--</span>
+                    </div>
+
+                    <!-- Price & Action Row -->
+                    <div class="pp-price-save-row">
+                        <div class="pp-price-info">
+                            <div class="pp-modal-price" id="modalPrice">--</div>
+                            <div id="modalNegotiableBadge"></div>
+                        </div>
+
+                        {% if role == "Seller" %}
+                        <!-- Actions (Seller only) -->
+                        <div class="pp-modal-actions-seller">
+                            <button type="button" class="pp-action-btn pp-download-btn-modal"
+                                onclick="downloadPropertyPDF(currentPropertyId)" title="Download Property Brochure">
+                                <i class="fas fa-file-pdf me-2"></i> Download Brochure
+                            </button>
+                            <button type="button" class="pp-action-btn pp-delete-btn-modal"
+                                onclick="deletePropertyFromModal()" id="modalDeleteBtn" title="Delete Property">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button type="button" class="pp-action-btn pp-edit-btn"
+                                onclick="editPropertyFromModal()" id="modalEditBtn" title="Edit Property">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                        {% else %}
+                        <!-- Actions (Buyer/Other) -->
+                        <div class="pp-modal-actions-buyer" style="display: flex; gap: 10px; align-items: center;">
+                            <button type="button" class="pp-action-btn pp-download-btn-modal"
+                                onclick="downloadPropertyPDF(currentPropertyId)" title="Download Property Brochure">
+                                <i class="fas fa-file-pdf me-2"></i> Download Brochure
+                            </button>
+                            <button type="button" class="pp-action-btn pp-heart-btn modal-heart-custom"
+                                onclick="toggleSaveFromModal()" id="modalHeartBtn">
+                                <div class="like-wrapper">
+                                    <div class="ripple"></div>
+                                    <svg class="heart" width="24" height="24" viewBox="0 0 24 24">
+                                        <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"></path>
+                                    </svg>
+                                    <div class="particles" style="--total-particles: 6">
+                                        <div class="particle" style="--i: 1; --color: #7642F0"></div>
+                                        <div class="particle" style="--i: 2; --color: #AFD27F"></div>
+                                        <div class="particle" style="--i: 3; --color: #DE8F4F"></div>
+                                        <div class="particle" style="--i: 4; --color: #D0516B"></div>
+                                        <div class="particle" style="--i: 5; --color: #5686F2"></div>
+                                        <div class="particle" style="--i: 6; --color: #D53EF3"></div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="pp-modal-layout {% if role == 'Seller' %}is-seller-modal{% endif %}">
+                    <!-- 3. Main Part -->
+                    <div class="pp-modal-main" {% if role == 'Seller' %}style="flex: 0 0 100%;"{% endif %}>
+                        <div class="pp-details-section">
+                            <h3 class="pp-section-title">Property Features</h3>
+                            <div class="pp-features-grid" id="modalFeatures">
+                                <!-- Dynamic Features -->
+                            </div>
+                        </div>
+
+                        <div class="pp-details-section">
+                            <h3 class="pp-section-title">Full Address</h3>
+                            <div class="pp-info-box">
+                                <p id="modalFullAddress" class="pp-address-text">--</p>
+                            </div>
+                        </div>
+
+                        <div class="pp-details-section">
+                            <h3 class="pp-section-title">Description</h3>
+                            <div class="pp-info-box">
+                                <p id="modalDescription">--</p>
+                            </div>
+                        </div>
+
+                        <div class="pp-details-section">
+                            <h3 class="pp-section-title">Location on Map</h3>
+                            <div class="pp-map-wrapper" id="modalMapContainer">
+                                <!-- Google Maps Iframe -->
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if role != "Seller" %}
+                    <!-- 4. Right Part (30%) - Seller Details (Hidden for Sellers) -->
+                    <aside class="pp-modal-sidebar">
+                        <div class="pp-seller-card">
+                            <div class="pp-seller-header">
+                                <div class="pp-seller-avatar">
+                                    <img id="modalSellerImg" src="" alt="Seller">
+                                </div>
+                                <h4 id="modalSellerName">--</h4>
+                                <p class="pp-role-tag" id="modalSellerRole">--</p>
+                            </div>
+
+                            <div class="pp-seller-info">
+                                <div class="pp-info-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span id="modalSellerPhone">--</span>
+                                </div>
+                                <div class="pp-info-item mt-2">
+                                    <i class="fas fa-envelope"></i>
+                                    <span id="modalSellerEmail">--</span>
+                                </div>
+                            </div>
+
+                            <div class="pp-seller-actions">
+                                <button class="pp-btn pp-btn-outline w-100" id="interestBtn" onclick="requestInterest()">
+                                    <i class="fas fa-hand-pointer"></i> Interested
+                                </button>
+                                <div id="interestCooldownMsg" class="mt-2 text-center" style="font-size: 0.75rem; color: #F13030; display: none; font-weight: 600;"></div>
+                            </div>
+                        </div>
+                    </aside>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,334 @@
+/* ==========================================================================
+   FORMS & INPUTS SYSTEM 
+   ========================================================================== */
+
+/* --- Container: Floating Group --- */
+.floating-group {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+/* --- Base Input Styling (Dynamic High Contrast) --- */
+.floating-group input,
+.floating-group select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 500;
+  /* Bolder text for visibility */
+
+  /* HIGH CONTRAST VARIABLES */
+  color: var(--auth-text-color);
+  border: 1px solid var(--auth-border);
+
+  background-color: transparent;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 10;
+}
+
+/* --- Floating Labels --- */
+.floating-group label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  /* Variable color for visibility */
+  color: var(--auth-subtext-color);
+
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.2s ease all;
+  padding: 0 4px;
+  background-color: transparent;
+  border-radius: 4px;
+  z-index: 15;
+}
+
+/* --- Focus & Active States --- */
+.floating-group input:focus,
+.floating-group input:not(:placeholder-shown),
+.floating-group select:focus,
+.floating-group select:valid {
+  border-color: var(--button-color);
+  border-width: 2px;
+
+  /* Slight background fill to make it pop */
+  background-color: var(--auth-input-focus);
+}
+
+/* Label Float Up (FIXED BLACK PATCH) */
+.floating-group input:focus+label,
+.floating-group input:not(:placeholder-shown)+label,
+.floating-group select:focus+label,
+.floating-group select:valid+label {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 13px;
+  font-weight: 700;
+
+  /* 1. Text becomes RED */
+  color: var(--button-color) !important;
+
+  /* 2. Background matches the Glass Panel (Not Black) */
+  background: var(--auth-glass-bg);
+
+  padding: 0 6px;
+  z-index: 20;
+}
+
+/* --- MOBILE PREFIX (+91) AUTOFILL --- */
+.prefix-group .input-prefix {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--auth-text-color);
+  /* Matches input text */
+  font-weight: 600;
+  z-index: 20;
+  pointer-events: none;
+}
+
+/* Force padding even when Autofilled */
+.prefix-group input,
+.prefix-group input:-webkit-autofill {
+  padding-left: 55px !important;
+}
+
+.prefix-group label {
+  left: 55px !important;
+}
+
+/* --- VALIDATION PRIORITY (Red overrides Green) --- */
+
+/* 1. Error State (HIGHEST PRIORITY) */
+.floating-group input.is-red,
+.floating-group select.is-red {
+  border-color: var(--error-color) !important;
+  box-shadow: 0 0 5px rgba(255, 51, 51, 0.2) !important;
+}
+
+.floating-group input.is-red+label,
+.floating-group select.is-red+label {
+  color: var(--error-color) !important;
+}
+
+/* 2. Success State */
+.floating-group input.is-green:not(.is-red),
+.floating-group select.is-green:not(.is-red),
+.floating-group input:not(:placeholder-shown):valid:not(.is-red) {
+  border-color: var(--success-color) !important;
+}
+
+.floating-group input.is-green:not(.is-red)+label,
+.floating-group select.is-green:not(.is-red)+label,
+.floating-group input:not(:placeholder-shown):valid:not(.is-red)+label {
+  color: var(--success-color) !important;
+}
+
+/* OTP Override */
+#otp:not(:placeholder-shown):valid {
+  border-color: var(--auth-border);
+  box-shadow: none;
+}
+
+#otp:not(:placeholder-shown):valid+label {
+  color: var(--auth-subtext-color);
+}
+
+/* Components */
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 27px;
+  transform: translateY(-50%);
+  color: var(--auth-subtext-color);
+  cursor: pointer;
+  z-index: 50;
+}
+
+.floating-group input[type="password"] {
+  padding-right: 45px !important;
+}
+
+/* Checklists & Dropdowns */
+#password-criteria {
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--auth-subtext-color);
+}
+
+#password-criteria span {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+/* Dropdown Menu Colors */
+.floating-group select {
+  background-color: transparent;
+  color: var(--auth-text-color);
+}
+
+.floating-group select option {
+  background-color: #ffffff;
+  /* Always white for readability */
+  color: #000000;
+  padding: 10px;
+}
+
+/* Hide placeholder option */
+.floating-group select option[value=""][disabled] {
+  display: none;
+}
+
+
+/* ==========================================================================
+   OTP (6 DIGIT) - UPDATED FOR LIGHT MODE
+   ========================================================================== */
+
+.otp-wrapper {
+  margin-bottom: 24px;
+}
+
+.otp-message {
+  margin-bottom: 12px;
+  padding: 14px 14px;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  background: rgba(128, 128, 128, 0.05);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.otp-message::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 140% at 0% 0%, rgba(211, 47, 47, 0.1), transparent 55%);
+  pointer-events: none;
+}
+
+.otp-message::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--button-color);
+  opacity: 0.85;
+}
+
+.otp-message-title {
+  position: relative;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--auth-text-color);
+  margin-bottom: 4px;
+}
+
+.otp-message-sub {
+  position: relative;
+  font-size: 13px;
+  color: var(--auth-subtext-color);
+}
+
+.otp-email {
+  position: relative;
+  color: var(--auth-text-color);
+  font-weight: 700;
+}
+
+.otp-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--auth-subtext-color);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 6 equal squares */
+.otp-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  align-items: center;
+}
+
+.otp-digit {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 58px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+
+  font-size: 19px;
+  font-weight: 800;
+  text-align: center;
+
+  /* MATCHES INPUT THEME */
+  color: var(--auth-text-color);
+  background: transparent;
+  border: 2px solid var(--auth-border);
+
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  caret-color: transparent;
+}
+
+.otp-digit:focus {
+  border-color: var(--button-color);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+  transform: translateY(-1px);
+}
+
+.otp-digit.filled {
+  border-color: var(--auth-text-color);
+  background: rgba(128, 128, 128, 0.05);
+}
+
+.otp-digit.is-green {
+  border-color: var(--success-color) !important;
+  box-shadow: none !important;
+}
+
+.otp-digit.is-red {
+  border-color: var(--error-color) !important;
+  box-shadow: none !important;
+}
+
+/* Mobile tuning */
+@media (max-width: 420px) {
+  .otp-row {
+    gap: 8px;
+  }
+
+  .otp-digit {
+    max-height: 50px;
+    font-size: 17px;
+    border-radius: 7px;
+  }
+}
+
+/* --- Remove Default Browser Password Eye Icon --- */
+
+/* For Microsoft Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+/* For Chrome/Safari (rarely needed but good safety) */
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  visibility: hidden;
+  position: absolute;
+  right: 0;
+}

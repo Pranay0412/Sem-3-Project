@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-overlay"></div>
+    <div class="auth-box">
+        <div style="margin-bottom: 30px;">
+            <div style="font-size: 28px; font-weight: 700; color: var(--auth-text-color); margin-bottom: 10px;">
+                Property<span style="color: var(--button-color)">Plus</span>
+            </div>
+            <p class="auth-subtitle">
+                Complete your profile setup.
+            </p>
+        </div>
+
+        <form action="{{ url_for('auth.profile_setup') }}" method="POST" enctype="multipart/form-data">
+
+            <!-- Live Preview -->
+            <div style="display: flex; justify-content: center; margin-bottom: 30px;">
+                <div
+                    style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--button-color); overflow: hidden; position: relative;">
+                    <img id="avatarPreview"
+                        src="https://ui-avatars.com/api/?name={{ user.full_name[0] if user.full_name else 'U' }}&background=1f2a44&color=ffffff&size=256"
+                        alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+
+            <!-- Upload Option -->
+            <div class="floating-group" style="margin-bottom: 20px;">
+                <input type="file" id="profile_image" name="profile_image" accept="image/*" class="form-control"
+                    style="padding-top: 15px;" onchange="handleFileSelect(event)">
+                <label for="profile_image" style="top: -10px; font-size: 12px; color: var(--button-color);">Upload
+                    Profile Image</label>
+                <small style="color: var(--auth-subtext-color); font-size: 12px;">Supported: JPG, PNG. Max 5MB.</small>
+            </div>
+
+            <div style="text-align: center; margin: 15px 0; color: var(--auth-text-color); font-weight: 600;">OR</div>
+
+            <!-- Color Option -->
+            <div style="margin-bottom: 30px;">
+                <label
+                    style="color: var(--auth-subtext-color); display: block; margin-bottom: 10px; font-size: 14px;">Choose
+                    Avatar Color</label>
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div style="display: flex; justify-content: center; gap: 12px;">
+                        <!-- 4 Preset Colors -->
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="avatar_color" value="1f2a44" checked
+                                onchange="updateAvatarColor('1f2a44')" style="display: none;">
+                            <div class="color-swatch"
+                                style="background: #1f2a44; width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;">
+                            </div>
+                        </label>
+
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="avatar_color" value="6d28d9" onchange="updateAvatarColor('6d28d9')"
+                                style="display: none;">
+                            <div class="color-swatch"
+                                style="background: #6d28d9; width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;">
+                            </div>
+                        </label>
+
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="avatar_color" value="0ea5a4" onchange="updateAvatarColor('0ea5a4')"
+                                style="display: none;">
+                            <div class="color-swatch"
+                                style="background: #0ea5a4; width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;">
+                            </div>
+                        </label>
+
+                        <label style="cursor: pointer;">
+                            <input type="radio" name="avatar_color" value="f43f5e" onchange="updateAvatarColor('f43f5e')"
+                                style="display: none;">
+                            <div class="color-swatch"
+                                style="background: #f43f5e; width: 40px; height: 40px; border-radius: 50%; border: 2px solid transparent;">
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Custom Color Picker -->
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label style="font-size: 12px; color: var(--auth-subtext-color); white-space: nowrap;">Custom
+                            color</label>
+                        <div
+                            style="display: inline-flex; align-items: center; padding: 2px; border-radius: 999px; background: linear-gradient(135deg, #f43f5e, #f97316, #22c55e, #3b82f6, #8b5cf6);">
+                            <div
+                                style="background: rgba(0,0,0,0.35); border-radius: 999px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px;">
+                                <input type="color" id="avatar_custom_color_setup" value="#1f2a44"
+                                    style="width: 32px; height: 24px; padding: 0; border-radius: 6px; border: none; background: transparent; cursor: pointer;">
+                                <span
+                                    style="font-size: 11px; color: #ffffff; text-transform: uppercase; letter-spacing: 0.5px;">Pick</span>
+                            </div>
+                        </div>
+                        <!-- Hidden radio to hold custom hex (without #) -->
+                        <input type="radio" id="avatar_color_custom_setup" name="avatar_color" value="1f2a44"
+                            style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary full-width">
+                Complete Setup
+            </button>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    const firstName = "{{ user.full_name[0] if user.full_name else 'U' }}";
+    const previewEl = document.getElementById('avatarPreview');
+
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewEl.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function updateAvatarColor(color) {
+        // Only update if no file is selected (file takes precedence in preview)
+        const fileInput = document.getElementById('profile_image');
+        if (!fileInput.files.length) {
+            previewEl.src = `https://ui-avatars.com/api/?name=${firstName}&background=${color}&color=ffffff&size=256`;
+        }
+    }
+
+    // Add active state to color swatches
+    const radios = document.querySelectorAll('input[name="avatar_color"]');
+    radios.forEach(r => {
+        r.addEventListener('change', function () {
+            document.querySelectorAll('.color-swatch').forEach(s => s.style.border = '2px solid transparent');
+            if (this.checked && this.nextElementSibling) {
+                this.nextElementSibling.style.border = '2px solid white';
+                this.nextElementSibling.style.boxShadow = '0 0 10px rgba(255,255,255,0.5)';
+            }
+        });
+    });
+
+    // Simple wiring for custom color picker on setup page
+    const setupColorInput = document.getElementById('avatar_custom_color_setup');
+    const setupCustomRadio = document.getElementById('avatar_color_custom_setup');
+    if (setupColorInput && setupCustomRadio) {
+        setupColorInput.addEventListener('input', function () {
+            const hex = (this.value || '').replace('#', '');
+            if (!hex) return;
+            setupCustomRadio.value = hex;
+            setupCustomRadio.checked = true;
+            updateAvatarColor(hex);
+            setupCustomRadio.dispatchEvent(new Event('change'));
+        });
+    }
+
+    // Init state for preset swatch highlight
+    const initiallyChecked = document.querySelector('input[name="avatar_color"]:checked');
+    if (initiallyChecked && initiallyChecked.nextElementSibling) {
+        initiallyChecked.nextElementSibling.style.border = '2px solid white';
+        initiallyChecked.nextElementSibling.style.boxShadow = '0 0 10px rgba(255,255,255,0.5)';
+    }
+</script>
+
+<style>
+    /* Inherit Auth Styles */
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: url('/static/img/auth-bg.jpg') no-repeat center center/cover;
+        position: relative;
+    }
+
+    .auth-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1;
+    }
+
+    .auth-box {
+        position: relative;
+        z-index: 2;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        color: white;
+    }
+
+    /* Input Styling Override */
+    input[type="file"]::file-selector-button {
+        background-color: var(--button-color);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 15px;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}

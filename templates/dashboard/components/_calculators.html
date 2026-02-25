@@ -1,0 +1,243 @@
+<!-- BUDGET CALCULATOR -->
+<div id="tab-budget" class="tab-content" style="display: none">
+    <div class="tool-container">
+        <div class="tool-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>Budget Calculator</h2>
+                <p class="mb-0">Estimate the home price you can afford based on your savings and monthly EMI.</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="openTab('tab-tools')">
+                <i class="fas fa-arrow-left me-1"></i> Back to Tools
+            </button>
+        </div>
+
+        <div class="tool-card">
+            <div class="tool-group">
+                <div class="tool-label">
+                    <span>Savings for buying home</span>
+                    <span class="tool-value" id="budgetSavingsVal">₹ 10 Lakh</span>
+                </div>
+                <input type="range" class="tool-slider" id="budgetSavings" min="100000" max="10000000" step="100000"
+                    value="1000000">
+            </div>
+
+            <div class="tool-group">
+                <div class="tool-label">
+                    <span>Monthly EMI you can afford</span>
+                    <span class="tool-value" id="budgetEmiVal">₹ 50,000</span>
+                </div>
+                <input type="range" class="tool-slider" id="budgetEmi" min="5000" max="500000" step="5000"
+                    value="50000">
+            </div>
+
+            <div class="tool-group">
+                <div class="tool-label">
+                    <span>Preferred loan tenure</span>
+                    <span class="tool-value" id="budgetTenureVal">20 Years</span>
+                </div>
+                <input type="range" class="tool-slider" id="budgetTenure" min="1" max="30" step="1" value="20">
+            </div>
+
+            <div class="tool-result-box">
+                <div class="tool-result-label">Approximate Property Budget</div>
+                <div class="tool-result-value" id="budgetResult">₹ 60.5 Lakh</div>
+                <p class="tool-note">* Calculated at an average interest rate of 8.5%</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EMI CALCULATOR -->
+<div id="tab-emi" class="tab-content" style="display: none">
+    <div class="tool-container">
+        <div class="tool-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>EMI Calculator</h2>
+                <p class="mb-0">Calculate your monthly loan repayments and total interest payable.</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="openTab('tab-tools')">
+                <i class="fas fa-arrow-left me-1"></i> Back to Tools
+            </button>
+        </div>
+
+        <div class="tool-layout">
+            <div class="tool-card">
+                <div class="tool-group">
+                    <div class="tool-label">
+                        <span>Loan Amount</span>
+                        <span class="tool-value" id="emiAmountVal">₹ 50 Lakh</span>
+                    </div>
+                    <input type="range" class="tool-slider" id="emiAmount" min="100000" max="20000000" step="100000"
+                        value="5000000">
+                </div>
+
+                <div class="tool-group">
+                    <div class="tool-label">
+                        <span>Interest Rate (%)</span>
+                        <span class="tool-value" id="emiRateVal">8.5%</span>
+                    </div>
+                    <input type="range" class="tool-slider" id="emiRate" min="5" max="20" step="0.1" value="8.5">
+                </div>
+
+                <div class="tool-group">
+                    <div class="tool-label">
+                        <span>Tenure (Years)</span>
+                        <span class="tool-value" id="emiTenureVal">20 Years</span>
+                    </div>
+                    <input type="range" class="tool-slider" id="emiTenure" min="1" max="30" step="1" value="20">
+                </div>
+            </div>
+
+            <div class="tool-card emi-chart-container">
+                <div class="emi-pie-chart" id="emiChart"></div>
+
+                <div class="emi-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--tool-accent)"></div>
+                        <span>Principal</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #4cc9f0"></div>
+                        <span>Interest</span>
+                    </div>
+                </div>
+
+                <div class="tool-result-box w-100 py-3 mt-4">
+                    <div class="tool-result-label" style="font-size: 0.7rem;">Monthly EMI</div>
+                    <div class="tool-result-value" id="emiMonthlyResult" style="font-size: 1.8rem;">₹ 43,391</div>
+                </div>
+
+                <div class="emi-summary-grid">
+                    <div class="summary-box">
+                        <div class="summary-label">Total Interest</div>
+                        <div class="summary-value" id="emiTotalInterest">₹ 54.1 L</div>
+                    </div>
+                    <div class="summary-box">
+                        <div class="summary-label">Total Payable</div>
+                        <div class="summary-value" id="emiTotalPayable">₹ 1.04 Cr</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- AREA CONVERTER -->
+<div id="tab-area" class="tab-content" style="display: none">
+    <div class="tool-container">
+        <div class="tool-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>Area Converter</h2>
+                <p class="mb-0">Quickly convert between different land measurement units used across India.</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="openTab('tab-tools')">
+                <i class="fas fa-arrow-left me-1"></i> Back to Tools
+            </button>
+        </div>
+
+        <div class="tool-card">
+            <div class="area-search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="areaSearch" class="area-search-input"
+                    placeholder="Search for a unit (e.g. Biswa, Kanal, Acre)..." oninput="filterAreaUnits()">
+            </div>
+
+            <div class="area-grid">
+                <!-- Primary / International -->
+                <div class="area-input-card"><label>Square Feet (sq.ft)</label><input type="number" id="unit-sqft" value="1000" oninput="convertArea('sqft')"></div>
+                <div class="area-input-card"><label>Square Meter (sq.m)</label><input type="number" id="unit-sqm" oninput="convertArea('sqm')"></div>
+                <div class="area-input-card"><label>Square Yard (Gajam)</label><input type="number" id="unit-sqyd" oninput="convertArea('sqyd')"></div>
+                <div class="area-input-card"><label>Acre</label><input type="number" id="unit-acre" oninput="convertArea('acre')"></div>
+                <div class="area-input-card"><label>Hectare</label><input type="number" id="unit-hectare" oninput="convertArea('hectare')"></div>
+                <div class="area-input-card"><label>Ares (100 sqm)</label><input type="number" id="unit-ares" oninput="convertArea('ares')"></div>
+
+                <!-- Regional Indian Units -->
+                <div class="area-input-card"><label>Bigha (Standard)</label><input type="number" id="unit-bigha" oninput="convertArea('bigha')"></div>
+                <div class="area-input-card"><label>Biswa (Standard)</label><input type="number" id="unit-biswa" oninput="convertArea('biswa')"></div>
+                <div class="area-input-card"><label>Biswa Kacha</label><input type="number" id="unit-biswakacha" oninput="convertArea('biswakacha')"></div>
+                <div class="area-input-card"><label>Katha</label><input type="number" id="unit-katha" oninput="convertArea('katha')"></div>
+                <div class="area-input-card"><label>Guntha</label><input type="number" id="unit-guntha" oninput="convertArea('guntha')"></div>
+                <div class="area-input-card"><label>Ankanam (AP/TS)</label><input type="number" id="unit-ankanam" oninput="convertArea('ankanam')"></div>
+                <div class="area-input-card"><label>Ground (Chennai)</label><input type="number" id="unit-ground" oninput="convertArea('ground')"></div>
+                <div class="area-input-card"><label>Cent / Decimal</label><input type="number" id="unit-cent" oninput="convertArea('cent')"></div>
+                <div class="area-input-card"><label>Kanal (North)</label><input type="number" id="unit-kanal" oninput="convertArea('kanal')"></div>
+                <div class="area-input-card"><label>Marla</label><input type="number" id="unit-marla" oninput="convertArea('marla')"></div>
+                <div class="area-input-card"><label>Killa (Punjab/Har.)</label><input type="number" id="unit-killa" oninput="convertArea('killa')"></div>
+                <div class="area-input-card"><label>Dhur (East)</label><input type="number" id="unit-dhur" oninput="convertArea('dhur')"></div>
+                <div class="area-input-card"><label>Lessa (Assam)</label><input type="number" id="unit-lessa" oninput="convertArea('lessa')"></div>
+                <div class="area-input-card"><label>Nali (UK)</label><input type="number" id="unit-nali" oninput="convertArea('nali')"></div>
+
+                <!-- Additional / Large Units -->
+                <div class="area-input-card"><label>Square Kilometer</label><input type="number" id="unit-sqkm" oninput="convertArea('sqkm')"></div>
+                <div class="area-input-card"><label>Square Mile</label><input type="number" id="unit-sqmile" oninput="convertArea('sqmile')"></div>
+                <div class="area-input-card"><label>Square Inch</label><input type="number" id="unit-sqinch" oninput="convertArea('sqinch')"></div>
+                <div class="area-input-card"><label>Perch</label><input type="number" id="unit-perch" oninput="convertArea('perch')"></div>
+            </div>
+
+            <div class="tool-note">
+                <i class="fas fa-info-circle me-2"></i> Regional variations may apply for units like Bigha, Biswa, and
+                Katha. Standard values are used here.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HOME LOAN INFO -->
+<div id="tab-loan" class="tab-content" style="display: none">
+    <div class="tool-container">
+        <div class="tool-header d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2>Home Loan Guide</h2>
+                <p class="mb-0">Everything you need to know about securing your dream home.</p>
+            </div>
+            <button class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="openTab('tab-tools')">
+                <i class="fas fa-arrow-left me-1"></i> Back to Tools
+            </button>
+        </div>
+
+        <div class="loan-info-grid">
+            <div class="loan-info-card">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h4>Eligibility</h4>
+                <ul>
+                    <li>Age: 21 - 65 years</li>
+                    <li>Income: Salaried or Self-employed</li>
+                    <li>Credit Score: 750+ preferred</li>
+                    <li>Employment Stability: 2+ years</li>
+                </ul>
+            </div>
+
+            <div class="loan-info-card">
+                <i class="fas fa-folder-open"></i>
+                <h4>Documents Required</h4>
+                <ul>
+                    <li>KYC (Aadhaar, PAN Card)</li>
+                    <li>Last 3-6 months Salary Slips</li>
+                    <li>Income Tax Returns (2 years)</li>
+                    <li>Bank Statement (6 months)</li>
+                    <li>Property Documents</li>
+                </ul>
+            </div>
+
+            <div class="loan-info-card">
+                <i class="fas fa-percentage"></i>
+                <h4>Average Rates (2024)</h4>
+                <ul>
+                    <li>Floating Rates: 8.4% - 9.5%</li>
+                    <li>Fixed Rates: 10% - 12%</li>
+                    <li>Processing Fee: 0.5% - 1%</li>
+                    <li>Pre-payment: Nil (Floating)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tool-card mt-4 text-center">
+            <h3>Ready to apply?</h3>
+            <p>Get in touch with our expert advisors for personalized home loan assistance.</p>
+            <button class="btn btn-primary px-5 py-3 rounded-pill fw-bold mt-3"
+                onclick="createGlobalToast('Home Loan assistance coming soon!', 'info')">
+                Talk to an Advisor
+            </button>
+        </div>
+    </div>
+</div>

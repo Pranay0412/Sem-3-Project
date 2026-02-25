@@ -1,0 +1,80 @@
+    <div class="modal fade" id="deletePropertyModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="background: var(--card); color: var(--text); border-radius: 16px; border: 1px solid var(--border);">
+                <!-- Step 1: Reason -->
+                <div id="deleteStepReason">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold">Delete Property Listing</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-muted small mb-4">We're sorry to see you go. Help us understand why you're
+                            removing this listing.</p>
+                        <div class="pp-reason-list">
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="modal_delete_reason" id="mReason1"
+                                    value="Sold through PropertyPlus">
+                                <label class="form-check-label" for="mReason1">Sold/Rented via PropertyPlus</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="modal_delete_reason" id="mReason2"
+                                    value="Sold elsewhere">
+                                <label class="form-check-label" for="mReason2">Sold/Rented elsewhere</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="modal_delete_reason" id="mReason3"
+                                    value="No longer for sale">
+                                <label class="form-check-label" for="mReason3">No longer for sale/rent</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="modal_delete_reason" id="mReason4"
+                                    value="Duplicate">
+                                <label class="form-check-label" for="mReason4">Duplicate Listing</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="modal_delete_reason" id="mReason5"
+                                    value="Other"
+                                    onclick="document.getElementById('mOtherReasonContainer').style.display='block'">
+                                <label class="form-check-label" for="mReason5">Other reason</label>
+                            </div>
+                            <div id="mOtherReasonContainer" style="display:none;" class="mt-2">
+                                <textarea id="mOtherReasonText" class="form-control" placeholder="Please specify..."
+                                    rows="2" style="background: rgba(0,0,0,0.05); color: var(--text);"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-danger" onclick="proceedToDeleteStep2()">Next: Identity
+                            Check</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Password -->
+                <div id="deleteStepPassword" style="display:none;">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title fw-bold">Permanently Delete?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-danger small mb-4">This action cannot be undone. Property data, images, and leads
+                            will be permanently removed.</p>
+                        <div class="pp-password-input-group mb-0">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="modal_confirm_delete_password" class="form-control"
+                                placeholder="Enter account password"
+                                style="background: rgba(0,0,0,0.05); color: var(--text); padding-left: 40px;">
+                            <i class="fas fa-eye pp-password-toggle"
+                                onclick="togglePasswordVisibility('modal_confirm_delete_password', this)"></i>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary" onclick="showDeleteStep(1)">Back</button>
+                        <button type="button" class="btn btn-danger" id="btnFinalModalDelete"
+                            onclick="submitModalDelete()">Confirm & Delete Permanently</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

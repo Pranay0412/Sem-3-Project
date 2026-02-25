@@ -1,0 +1,61 @@
+/* ==========================================================================
+   BASE STYLES & RESETS
+   Description: Global element styles, resets, and browser normalization.
+   ========================================================================== */
+@import url('variables.css'); /* Design tokens */
+
+/* --- Global Reset --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* --- Document Setup --- */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+body {
+  font-family: var(--font-primary);
+  color: var(--text-main);
+  background-color: var(--primary-bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* --- Common Elements --- */
+a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+ul {
+  list-style: none;
+}
+
+/* --- Browser Fix: Webkit Autofill Override --- */
+/* Forces autofilled inputs to match the current theme (Light or Dark) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  /* 1. Set the background color to match your Glass Card variable */
+  -webkit-box-shadow: 0 0 0 30px var(--auth-glass-bg) inset !important;
+  
+  /* 2. Set the text color to match your Theme Text variable */
+  -webkit-text-fill-color: var(--auth-text-color) !important;
+  
+  /* 3. Keep font consistent */
+  font-family: "Segoe UI", "Roboto", sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  
+  /* 4. Smooth transition */
+  transition: background-color 5000s ease-in-out 0s;
+}

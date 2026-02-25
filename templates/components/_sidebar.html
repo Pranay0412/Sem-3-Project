@@ -1,0 +1,137 @@
+<!-- =========================
+     MOBILE HEADER
+========================= -->
+<div class="mobile-header d-md-none">
+  <button class="mobile-toggle" onclick="toggleMobileSidebar()" type="button" aria-label="Menu">
+    <div class="grid-icon">
+      <span></span><span></span><span></span><span></span>
+    </div>
+  </button>
+
+  <a class="brand-logo" href="{{ request.path }}">
+    Property<span>Plus</span>
+  </a>
+
+    <div class="mobile-actions">
+    {% if role == 'Seller' %}
+    <button class="mobile-icon-btn" type="button" aria-label="Add Property"
+      onclick="openTab('tab-add-property'); return false;">
+      <i class="fas fa-plus"></i>
+    </button>
+    {% endif %}
+
+    <button class="mobile-icon-btn" type="button" aria-label="Notifications"
+      onclick="openNotifications()" style="position: relative;">
+      <i class="fas fa-bell"></i>
+      <span class="pp-notify-badge" id="notifyBadgeMobile"
+        style="{% if unread_count and unread_count > 0 %}display: flex;{% else %}display: none;{% endif %}">{{
+        unread_count if unread_count else 0 }}</span>
+    </button>
+  </div>
+</div>
+
+<!-- =========================  
+     SIDEBAR
+========================= -->
+<aside class="sidebar" id="mainSidebar">
+  <button type="button" class="sidebar-close-btn d-md-none" onclick="toggleMobileSidebar()" aria-label="Close sidebar">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <div class="sidebar-top">
+    <!-- Brand -->
+    <!-- Brand -->
+    <a class="sidebar-brand" href="{{ request.path }}">
+      {% include 'components/_prism_logo.html' %}
+      <span class="brand-text">Property<span>Plus</span></span>
+    </a>
+
+    {% set u = session.get('user') %}
+    {% set role = u.get('role') if u else '' %}
+
+    <!-- =========================
+         PROFILE
+    ========================= -->
+    <a href="#" class="sidebar-profile-link" onclick="openTab('tab-profile', this); return false;">
+      <div class="avatar">
+        {% if u and u.profile_image %}
+        {% if u.profile_image.startswith('http') %}
+        <img src="{{ u.profile_image }}" alt="Profile" class="avatar-img">
+        {% else %}
+        <img src="{{ url_for('static', filename='uploads/' + u.profile_image) }}" alt="Profile" class="avatar-img">
+        {% endif %}
+        {% elif u and u.username %}
+        {{ u.username[0]|upper }}
+        {% else %}
+        <i class="fas fa-user"></i>
+        {% endif %}
+      </div>
+
+      <div class="profile-info">
+        <h4 class="profile-name">
+          {{ u.username if u else 'User' }}
+        </h4>
+
+        <!-- ROLE CAPSULE -->
+        {% if role == 'Buyer' %}
+        <span class="role-pill role-buyer">Buyer</span>
+        {% elif role == 'Seller' %}
+        <span class="role-pill role-seller">Seller</span>
+        {% endif %}
+      </div>
+    </a>
+
+    <!-- =========================
+         MENU
+    ========================= -->
+    <nav class="sidebar-menu">
+      <a href="#" class="menu-link active" onclick="openTab('tab-home', this); return false;">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+
+      {% if role == "Buyer" %}
+      <a href="#" class="menu-link" onclick="openTab('tab-saved', this); return false;">
+        <i class="fas fa-heart"></i>
+        <span>Saved</span>
+      </a>
+
+      {% endif %}
+
+      {% if role == "Seller" %}
+      <a href="#" class="menu-link" onclick="openTab('tab-requests', this); return false;">
+        <i class="fas fa-envelope"></i>
+        <span>Requests</span>
+      </a>
+      {% endif %}
+
+
+
+      <!-- =========================
+           TOOLS & CALCULATOR
+      ========================= -->
+      <a href="#" class="menu-link" onclick="openTab('tab-tools', this); return false;">
+        <i class="fas fa-tools"></i>
+        <span>Tools & Calculator</span>
+      </a>
+
+      <a href="#" class="menu-link" onclick="openTab('tab-settings', this); return false;">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="sidebar-footer">
+    <a href="#" class="menu-link" onclick="openTab('tab-help', this); return false;">
+      <i class="fas fa-headset"></i>
+      <span>Help</span>
+    </a>
+    <a href="{{ url_for('auth.logout') }}" class="menu-link logout-link">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+    </a>
+  </div>
+</aside>
+
+<div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>

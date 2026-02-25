@@ -1,0 +1,590 @@
+/* =========================================
+   SIDEBAR DESIGN - COLLAPSED BY DEFAULT
+   Clean + Theme-aware (Light/Dark)
+   ========================================= */
+@import url('variables.css'); /* Design tokens */
+
+/* Constants & theme tokens moved to variables.css */
+
+/* =========================================
+   THEME TOKENS (Sidebar)
+   Default = DARK mode
+========================================= */
+
+/* Light mode overrides */
+html[data-theme="light"] {
+  --sb-bg: #f6e8ea;
+  --sb-text: #22181c;
+  --sb-muted: rgba(34, 24, 28, 0.65);
+  --sb-hover: rgba(244, 91, 105, 0.22);
+  --sb-active: rgba(244, 91, 105, 0.28);
+  --sb-border: rgba(34, 24, 28, 0.15);
+  --sb-card: rgba(34, 24, 28, 0.06);
+  --sb-card-border: rgba(34, 24, 28, 0.12);
+  --sb-brand: #22181c;
+
+  --sb-icon: rgba(34, 24, 28, 0.85);
+}
+
+/* -----------------------------------------
+   (Compatibility mapping)
+   Your old CSS used these vars; map them
+----------------------------------------- */
+
+/* =========================================
+   1) Sidebar Container
+========================================= */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-collapsed-width);
+
+  background: var(--sb-bg);
+  border-right: 1px solid var(--sb-border);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 20px 10px;
+  z-index: 1100;
+
+  transition:
+    width var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1),
+    padding var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1);
+
+  overflow: hidden;
+  white-space: nowrap;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.02);
+}
+
+.sidebar:hover {
+  width: var(--sidebar-expanded-width);
+  padding: 20px 20px;
+}
+
+/* =========================================
+   2) Brand Section
+========================================= */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 18px;
+  padding-left: 10px;
+
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.brand-icon {
+  font-size: 24px;
+  color: var(--sb-plus);
+  flex-shrink: 0;
+}
+
+.brand-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: var(--sb-brand);
+
+  opacity: 0;
+  transition: opacity var(--transition-speed);
+}
+
+.sidebar:hover .brand-text {
+  opacity: 1;
+}
+
+.brand-text span {
+  color: var(--sb-plus);
+}
+
+/* =========================================
+   PRISM LOGO COMPONENT (Ported from components.css)
+   ========================================= */
+.logo-prism-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: #22181C; /* "Coffee" / Liquorice color */
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  /* margin-right is handled by parent gap */
+}
+
+/* Subtle hover effect */
+.logo-prism-wrapper:hover {
+  opacity: 0.9;
+}
+
+/* SVG internal transition */
+.logo-prism-wrapper svg {
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+/* =========================================
+   3) Profile Section (clickable "card")
+========================================= */
+.sidebar-profile-link {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 12px 10px;
+  border-radius: 12px;
+
+  background: transparent;
+  border: 1px solid transparent;
+  margin-bottom: 22px;
+
+  overflow: hidden;
+  transition: all var(--transition-speed);
+
+  text-decoration: none !important;
+  color: inherit !important;
+  cursor: pointer;
+}
+
+.sidebar-profile-link:hover {
+  background: var(--sb-hover);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+
+  background: color-mix(in srgb, var(--sb-bg) 60%, #fff);
+  color: var(--sb-plus);
+
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  opacity: 0;
+  transition: opacity var(--transition-speed);
+}
+
+.sidebar:hover .profile-info {
+  opacity: 1;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--sb-text);
+}
+
+.profile-role {
+  font-size: 11px;
+  color: var(--sb-muted);
+}
+
+/* =========================================
+   4) Navigation Links
+========================================= */
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+
+  color: var(--sb-text);
+  text-decoration: none !important;
+
+  border-radius: 10px;
+  transition:
+    background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
+}
+
+.menu-link i {
+  width: 40px;
+  font-size: 20px;
+  text-align: center;
+  flex-shrink: 0;
+
+  color: var(--sb-icon);
+  transition: color 0.3s;
+}
+
+.menu-link span {
+  font-size: 15px;
+  font-weight: 600;
+
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.sidebar:hover .menu-link span {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.menu-link:hover {
+  background: var(--sb-hover);
+  transform: translateX(3px);
+}
+
+/* Section Header Style */
+.sidebar-section-separator {
+  height: 1px;
+  background: var(--sb-border);
+  margin: 10px 0;
+  opacity: 0.5;
+}
+
+.sidebar-section-header {
+  padding: 5px 15px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--sb-muted);
+  letter-spacing: 0.8px;
+  opacity: 0;
+  transition: opacity var(--transition-speed);
+}
+
+.sidebar:hover .sidebar-section-header {
+  opacity: 1;
+}
+
+/* Fully Connected Tab Design - Ultra Organic Curves */
+.menu-link.active {
+  /* Use a solid color derived from the theme to prevent ugly transparency overlaps */
+  background: var(--sb-active-solid, #f2d5d9) !important;
+  color: var(--sb-plus) !important;
+
+  position: relative;
+  /* Perfectly align with the expanded sidebar padding (20px) */
+  margin-right: -20px;
+  border-radius: 40px 0 0 40px;
+  /* Increased for smoother look */
+  z-index: 10;
+
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.04);
+  transform: none;
+  /* Keep it perfectly still for layout connection */
+}
+
+/* Define solid colors for cleaner overlaps */
+html[data-theme="light"] {
+  --sb-active-solid: #ffffff;
+  /* Contrast against the light gray bg */
+}
+
+html
+
+.menu-link.active i {
+  color: var(--sb-plus) !important;
+}
+
+/* Seamless Curve Connections (The "Bridges") */
+.menu-link::before,
+.menu-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  width: 40px;
+  /* Matched to border-radius */
+  height: 40px;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.menu-link.active::before,
+.menu-link.active::after {
+  opacity: 1;
+}
+
+.menu-link.active::before {
+  top: -40px;
+  border-radius: 0 0 40px 0;
+  box-shadow: 20px 20px 0 0 var(--sb-active-solid);
+}
+
+.menu-link.active::after {
+  bottom: -40px;
+  border-radius: 0 40px 0 0;
+  box-shadow: 20px -20px 0 0 var(--sb-active-solid);
+}
+
+/* =========================================
+   5) Footer / Logout
+========================================= */
+.sidebar-footer {
+  padding-top: 20px;
+  border-top: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logout-link:hover {
+  background: rgba(241, 48, 48, 0.12) !important;
+  color: var(--sb-text) !important;
+}
+
+/* =========================================
+   6) Main Area Adjustment (Desktop)
+========================================= */
+@media (min-width: 769px) {
+  body {
+    transition: padding-left var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1);
+    padding-left: var(--sidebar-collapsed-width);
+  }
+
+  body:has(.sidebar:hover) {
+    padding-left: var(--sidebar-expanded-width);
+  }
+
+  /* Fallback class if you ever need it */
+  .dashboard-container {
+    margin-left: 0;
+    transition: margin-left var(--transition-speed) cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+}
+
+/* =========================================
+   7) Mobile Header + Mobile Sidebar
+========================================= */
+.mobile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+
+  background: #fff;
+  border-bottom: 1px solid var(--sb-border);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+  z-index: 1050;
+}
+
+html[data-theme="dark"] .mobile-header {
+  background: color-mix(in srgb, var(--sb-bg) 85%, #000);
+}
+
+.mobile-toggle {
+  background: none;
+  border: none;
+}
+
+.grid-icon {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3px;
+}
+
+.grid-icon span {
+  width: 8px;
+  height: 8px;
+  background: var(--sb-text);
+  border-radius: 2px;
+}
+
+.mobile-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.mobile-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--sb-border);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mobile-icon-btn i {
+  font-size: 20px;
+  color: var(--sb-text);
+}
+
+.mobile-icon-btn:hover {
+  background: var(--sb-card);
+  border-color: rgba(244, 91, 105, 0.35);
+}
+
+.mobile-nav-right i {
+  font-size: 20px;
+  color: var(--sb-text);
+}
+
+/* Sidebar mobile close button */
+.sidebar-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--sb-text);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+@media (min-width: 769px) {
+  .sidebar-close-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: var(--sidebar-expanded-width);
+    left: calc(-1 * var(--sidebar-expanded-width));
+    transition: left 0.4s ease;
+    padding: 20px;
+    white-space: normal;
+  }
+
+  .sidebar.active {
+    left: 0;
+  }
+
+  .sidebar .brand-text,
+  .sidebar .profile-info,
+  .sidebar .menu-link span {
+    opacity: 1;
+    transform: none;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: none;
+    z-index: 1090;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
+  .dashboard-container {
+    padding-top: 80px !important;
+  }
+}
+
+/* =========================================
+   Ripple overlay (optional - keep if used)
+========================================= */
+#theme-ripple-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  clip-path: circle(0% at 50% 50%);
+  background: var(--sb-bg);
+  transition: clip-path 0.8s ease-in-out;
+}
+
+#theme-ripple-overlay.ripple-expanding {
+  clip-path: circle(150% at 50% 50%);
+}
+
+/* =========================================
+   MOBILE HEADER BRAND - no link look
+========================================= */
+.mobile-header .brand-logo,
+.mobile-header .brand-logo:visited,
+.mobile-header .brand-logo:hover,
+.mobile-header .brand-logo:active {
+  text-decoration: none !important;
+  outline: none !important;
+  border: none !important;
+  font-weight: 900;
+  letter-spacing: 0.3px;
+  color: var(--sb-brand) !important;
+  /* Property */
+}
+
+.mobile-header .brand-logo span {
+  color: var(--sb-plus) !important;
+  /* Plus red */
+}
+
+/* Hide mobile header on large screens */
+@media (min-width: 769px) {
+  .mobile-header {
+    display: none !important;
+  }
+}
+
+/* =========================================
+   PROFILE IMAGE
+========================================= */
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* =========================================
+   ROLE CAPSULES
+========================================= */
+.role-pill {
+  display: inline-block;
+  margin-top: 2px;
+  padding: 2px 8px;
+  font-size: 9px;
+  font-weight: 700;
+  border-radius: 999px;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.role-buyer {
+  background: #6203af;
+  /* dark blue */
+}
+
+.role-seller {
+  background: #16a34a;
+  /* green */
+}

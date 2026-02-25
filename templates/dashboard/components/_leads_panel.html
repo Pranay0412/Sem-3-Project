@@ -1,0 +1,125 @@
+                    <div class="pp-page-body">
+                        <div class="pp-results-head">
+                            <div class="pp-results-title">Buyer Interest Requests</div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="clearInbox()"
+                                    id="btnClearInbox" {% if not leads %}style="display: none;" {% endif %}>
+                                    <i class="fas fa-trash-sweep"></i> Clear Inbox
+                                </button>
+                                <div class="pp-view-toggle" role="group" aria-label="View toggle">
+                                    <button type="button" class="pp-view-btn active" data-view="grid"
+                                        aria-label="Grid view">
+                                        <i class="fas fa-border-all"></i>
+                                    </button>
+                                    <button type="button" class="pp-view-btn" data-view="list" aria-label="List view">
+                                        <i class="fas fa-bars"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pp-results" data-view="grid" id="requestsList">
+                            {% for lead in leads %}
+                            <div class="pp-request-card" data-id="{{ lead.id }}">
+                                <div class="pp-request-side">
+                                    <div class="pp-request-time">
+                                        <i class="fas fa-clock"></i>
+                                        <span>{{ lead.created_at.strftime('%H:%M') }}</span>
+                                        <small style="font-size: 0.7rem; opacity: 0.7;">{{ lead.created_at.strftime('%d
+                                            %b') }}</small>
+                                        {% if lead.status == 'Pending' %}
+                                        <div class="pp-status-badge">Pending</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="pp-request-content">
+                                    <!-- Property Header -->
+                                    <div class="pp-request-prop-info">
+                                        {% if lead.prop_images and lead.prop_images|length > 0 %}
+                                        <img src="{{ url_for('static', filename=lead.prop_images[0]) }}" alt="Property">
+                                        {% else %}
+                                        <div class="pp-request-prop-img-placeholder">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div class="pp-request-prop-text">
+                                            <div class="pp-prop-header-row">
+                                                <span class="pp-label">Interested in</span>
+                                                <span
+                                                    class="pp-prop-type-tag {{ 'for-rent' if lead.prop_listing_type == 'Rent' else 'for-sale' }}">
+                                                    {{ 'Rent' if lead.prop_listing_type == 'Rent' else 'Buy' }}
+                                                </span>
+                                            </div>
+                                            <h4 class="pp-prop-title">{{ lead.prop_title }}</h4>
+                                            <div class="pp-prop-location">
+                                                <i class="fas fa-map-marker-alt"></i> {{ lead.prop_city }}, {{
+                                                lead.prop_state }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Buyer & History Group -->
+                                    <div class="pp-buyer-history-group">
+                                        <div class="pp-request-buyer-row">
+                                            <div class="pp-buyer-identity">
+                                                <div class="pp-buyer-avatar">
+                                                    {% if lead.buyer_profile_image %}
+                                                    {% if lead.buyer_profile_image.startswith('http') %}
+                                                    <img src="{{ lead.buyer_profile_image }}" alt="Buyer">
+                                                    {% else %}
+                                                    <img src="{{ url_for('static', filename='uploads/' + lead.buyer_profile_image) }}"
+                                                        alt="Buyer">
+                                                    {% endif %}
+                                                    {% else %}
+                                                    <i class="fas fa-user"></i>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="pp-buyer-name">{{ lead.buyer_name }}</div>
+                                            </div>
+
+                                            <div class="pp-buyer-contact-item">
+                                                <i class="fas fa-envelope"></i>
+                                                <span>{{ lead.buyer_email }}</span>
+                                            </div>
+
+                                            <div class="pp-buyer-contact-item">
+                                                <i class="fas fa-phone"></i>
+                                                <span>{{ lead.buyer_mobile }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        {% if lead.history %}
+                                        <details class="pp-request-history">
+                                            <summary class="pp-history-label">
+                                                <span><i class="fas fa-history"></i> Older Requests</span>
+                                                <i class="fas fa-chevron-down toggle-icon"></i>
+                                            </summary>
+                                            <div class="pp-history-list">
+                                                {% for hist in lead.history %}
+                                                <div class="pp-history-item">
+                                                    <div class="pp-history-time">
+                                                        <i class="far fa-clock"></i>
+                                                        {{ hist.created_at.strftime('%H:%M, %d %b') }}
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </details>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="pp-empty-state">
+                                <div class="pp-empty-icon-wrapper">
+                                    <i class="fas fa-inbox"></i>
+                                </div>
+                                <h3>No Activity Yet</h3>
+                                <p>Buyer interest and messages or messages will show up here.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>

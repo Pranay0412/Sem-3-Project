@@ -1,0 +1,203 @@
+/* =========================================
+   SELLER DASHBOARD STYLES
+   ========================================= */
+
+/* --- Dashboard Background --- */
+.dashboard-container {
+  background: radial-gradient(circle at top left, rgba(241, 48, 48, 0.10), transparent 45%),
+    radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.12), transparent 50%),
+    var(--bg-body);
+}
+
+/* --- Panel & Cards --- */
+.panel,
+.feature-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feature-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Table Styles (List View) --- */
+.table-responsive {
+  overflow-x: auto;
+}
+
+table tbody tr {
+  transition: background 0.25s ease, transform 0.2s ease;
+  border-bottom: 1px solid var(--border-color);
+}
+
+table tbody tr:last-child {
+  border-bottom: none;
+}
+
+table tbody tr:hover {
+  background: rgba(241, 48, 48, 0.04);
+}
+
+/* Thumbnail Zoom on Hover */
+table tbody img {
+  transition: transform 0.3s ease;
+}
+
+table tbody tr:hover img {
+  transform: scale(1.08);
+}
+
+/* --- Layout Switcher Buttons (List/Grid) --- */
+.layout-btn {
+  background: transparent;
+  border: none;
+  width: 35px;
+  height: 35px;
+  color: var(--text-muted);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.layout-btn:hover {
+  color: var(--button-color);
+  background: rgba(128, 128, 128, 0.1);
+}
+
+.layout-btn.active {
+  background: var(--card-bg);
+  color: var(--button-color);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+}
+
+/* --- Action Buttons (Edit/Delete) --- */
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.action-btn.edit {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+.action-btn.edit:hover {
+  background: #6366f1;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn.delete {
+  background: rgba(241, 48, 48, 0.1);
+  color: var(--error-color);
+  margin-left: 8px;
+}
+
+.action-btn.delete:hover {
+  background: var(--error-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* --- Grid View Card Styles --- */
+#seller-grid-view .panel {
+  transition: transform 0.25s ease;
+}
+
+#seller-grid-view .panel:hover {
+  transform: translateY(-5px);
+}
+
+
+/* =========================================
+   SETTINGS: THEME TOGGLE (Seller)
+   ========================================= */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--card-bg);
+}
+
+.settings-text h4 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.settings-text p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Simple toggle switch (Semester-friendly) */
+.theme-switch {
+  position: relative;
+  width: 56px;
+  height: 30px;
+  flex: 0 0 auto;
+}
+
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--border-color);
+  border-radius: 999px;
+  transition: 0.25s;
+}
+
+.theme-switch .slider:before {
+  content: "";
+  position: absolute;
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  top: 4px;
+  background: var(--card-bg);
+  border-radius: 50%;
+  transition: 0.25s;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.theme-switch input:checked+.slider {
+  background: var(--accent);
+}
+
+.theme-switch input:checked+.slider:before {
+  transform: translateX(26px);
+}
+
+.theme-hint {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 13px;
+}

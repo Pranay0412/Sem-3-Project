@@ -1,0 +1,422 @@
+/* ==========================================================================
+   COMPONENTS LIBRARY
+   Description: Reusable UI elements (Buttons, Cards, Badges).
+   ========================================================================== */
+
+/* --- Buttons --- */
+.btn-primary {
+  background-color: var(--button-color);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  background-color: var(--button-hover);
+}
+
+.btn-signin {
+  padding: 8px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: white !important;
+  font-weight: 500;
+}
+
+.btn-signin:hover {
+  border-color: var(--button-color);
+  background-color: var(--button-color);
+}
+
+.full-width {
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* --- Cards & Panels --- */
+.panel,
+.profile-card,
+.auth-box {
+  background: var(--page-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+}
+
+.profile-card {
+  padding: 25px;
+}
+
+.panel {
+  padding: 25px;
+}
+
+/* --- Logo & Utilities --- */
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.logo span {
+  color: var(--button-color);
+}
+
+small.text-danger {
+  display: block;
+  margin-top: 5px;
+  color: var(--error-color);
+  font-size: 12px;
+}
+
+/* --- Profile/Sidebar Component --- */
+.profile-card {
+  padding: 30px;
+  background: var(--page-bg);
+  /* Adapts to Dark/Light mode */
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+  height: fit-content;
+  /* Don't stretch full height */
+}
+
+.profile-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  background: var(--button-color);
+  /* Uses your Red Brand Color */
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(214, 40, 40, 0.3);
+}
+
+.profile-meta h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  color: var(--text-main);
+}
+
+.profile-role {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.profile-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-list li:last-child {
+  border-bottom: none;
+}
+
+.profile-list strong {
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+/* =========================================
+   OFF-CANVAS SIDEBAR & TOGGLE
+   ========================================= */
+
+/* --- 1. Avatar Toggle Button (Visible on Dashboard) --- */
+.sidebar-toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  /* Top right corner */
+  z-index: 1050;
+
+  background: var(--button-color);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  box-shadow: 0 6px 20px rgba(241, 48, 48, 0.4);
+}
+
+/* --- 2. The Sidebar Drawer (Hidden by default) --- */
+.sidebar-drawer {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  /* HIDDEN OFF-SCREEN */
+  width: 300px;
+  height: 100vh;
+  background: var(--page-bg);
+  /* Adapts to Dark/Light theme */
+  z-index: 2000;
+  box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15);
+  transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+}
+
+/* Class added via JS to show sidebar */
+.sidebar-drawer.active {
+  left: 0;
+}
+
+/* --- 3. Overlay (Dark background when open) --- */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1900;
+  opacity: 0;
+  visibility: hidden;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --- 4. Sidebar Content Styling --- */
+.sidebar-header {
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--button-color);
+}
+
+.sidebar-profile {
+  padding: 30px 25px;
+  text-align: center;
+  background: linear-gradient(to bottom, var(--primary-bg), var(--page-bg));
+}
+
+.sidebar-avatar {
+  width: 80px;
+  height: 80px;
+  background: var(--button-color);
+  color: white;
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  box-shadow: 0 5px 15px rgba(241, 48, 48, 0.3);
+}
+
+.sidebar-user-info h4 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--text-main);
+}
+
+.badge-role {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(128, 128, 128, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: var(--text-muted);
+  margin-top: 5px;
+  display: inline-block;
+}
+
+/* --- 5. Navigation Links --- */
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-label {
+  padding: 15px 25px 5px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.sidebar-nav li a {
+  display: flex;
+  align-items: center;
+  padding: 12px 25px;
+  color: var(--text-main);
+  font-weight: 500;
+  font-size: 15px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s;
+}
+
+.sidebar-nav li a i {
+  width: 25px;
+  margin-right: 10px;
+  color: var(--text-muted);
+  font-size: 18px;
+  text-align: center;
+}
+
+.sidebar-nav li a:hover {
+  background: rgba(128, 128, 128, 0.05);
+  color: var(--button-color);
+  border-left-color: var(--button-color);
+}
+
+.sidebar-nav li a:hover i {
+  color: var(--button-color);
+}
+
+.link-logout {
+  color: var(--button-color) !important;
+}
+
+.link-logout i {
+  color: var(--button-color) !important;
+}
+
+/* =========================
+   PRISM LOGO COMPONENT
+   ========================= */
+.logo-prism-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: #22181C;
+  /* Matches your brand liquorice color */
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-right: 10px;
+  /* Space between logo and text */
+}
+
+/* Subtle hover effect */
+.logo-prism-wrapper:hover {
+  opacity: 0.9;
+}
+
+/* SVG internal transition */
+.logo-prism-wrapper svg {
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3));
+}
+
+/* =========================
+   SIDEBAR BRAND HOVER EFFECT
+   ========================= */
+/* Default state: Hide text, show only logo */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Center logo when text is hidden */
+  text-decoration: none;
+  transition: all 0.3s ease;
+  width: 100%;
+  /* Ensure it spans width for hover */
+  overflow: hidden;
+  /* Prevent text overflow during transition */
+}
+
+/* The text part of the brand */
+.sidebar-brand .brand-text {
+  max-width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  transition: max-width 0.5s ease, opacity 0.3s ease;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-heading);
+}
+
+.sidebar-brand .brand-text span {
+  color: var(--button-color);
+  /* The 'Plus' part */
+}
+
+/* Hover state: Reveal text */
+.sidebar-brand:hover {
+  justify-content: flex-start;
+  /* Align detail to left on expand */
+  padding-left: 20px;
+  /* Add some spacing */
+}
+
+.sidebar-brand:hover .brand-text {
+  max-width: 200px;
+  /* Sufficient width to show text */
+  opacity: 1;
+  margin-left: 10px;
+}

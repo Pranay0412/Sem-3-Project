@@ -1,0 +1,178 @@
+-- ============================================
+-- PROPERTYPLUS DATABASE SETUP
+-- PostgreSQL Compatible
+-- Run in pgAdmin or psql
+-- ============================================
+
+
+-- =====================================================
+-- USERS TABLE UPDATES (Only if table already exists)
+-- =====================================================
+
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS last_password_update TIMESTAMP;
+
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS is_2fa_enabled BOOLEAN DEFAULT TRUE;
+
+ALTER TABLE users 
+ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
+-- =====================================================
+-- PROPERTIES TABLE
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS properties (
+    id SERIAL PRIMARY KEY,
+
+    seller_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    title VARCHAR(255) NOT NULL,
+    property_type VARCHAR(50) NOT NULL,       -- Apartment, Villa, Plot, Commercial
+    listing_type VARCHAR(50) NOT NULL,        -- Sale, Rent, Both
+    category VARCHAR(50) NOT NULL,            -- Residential, Commercial
+
+    -- ================= Location =================
+    house_no VARCHAR(100),
+    address1 TEXT,
+    address2 TEXT,
+    area VARCHAR(100),
+    city VARCHAR(100),
+    state VARCHAR(100),
+    pincode VARCHAR(20),
+    landmark VARCHAR(100),
+    latitude DECIMAL(10,8),
+    longitude DECIMAL(11,8),
+
+    -- ================= Property Details =================
+    built_up_area FLOAT,
+    carpet_area FLOAT,
+    floor_number INTEGER,
+    total_floors INTEGER,
+    facing VARCHAR(50),
+    furnishing_status VARCHAR(50),
+    property_age VARCHAR(50),
+    bedrooms INTEGER,
+    bathrooms INTEGER,
+    balcony BOOLEAN,
+    integrated_bathroom BOOLEAN,
+
+    -- ================= Pricing =================
+    expected_price DOUBLE PRECISION,
+    rent_amount DOUBLE PRECISION,
+    is_negotiable BOOLEAN DEFAULT FALSE,
+    maintenance_charges DOUBLE PRECISION,
+    token_amount DOUBLE PRECISION,
+    security_deposit DOUBLE PRECISION,
+    ownership_type VARCHAR(50),
+    available_from DATE,
+
+    -- ================= Media =================
+    images TEXT[],
+    floor_plan TEXT,
+    video_path TEXT,
+
+    -- ================= Seller Snapshot =================
+    seller_name VARCHAR(100),
+    seller_mobile VARCHAR(20),
+    seller_email VARCHAR(100),
+    seller_role VARCHAR(50),
+    preferred_contact_time VARCHAR(50),
+
+    -- ================= Additional Info =================
+    description TEXT,
+    highlights TEXT,
+
+    -- ================= Meta =================
+    is_verified BOOLEAN DEFAULT FALSE,
+    status VARCHAR(50) DEFAULT 'Active',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- =====================================================
+-- SAVED PROPERTIES TABLE (Wishlist / Heart Button)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS saved_properties (
+    id SERIAL PRIMARY KEY,
+
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE(user_id, property_id)
+);
+
+
+-- =====================================================
+-- PROPERTY LEADS TABLE (Interested Buyers)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS property_leads (
+    id SERIAL PRIMARY KEY,
+
+    property_id INTEGER NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
+    buyer_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    seller_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    buyer_name VARCHAR(100),
+    buyer_email VARCHAR(100),
+    buyer_mobile VARCHAR(20),
+
+    property_title VARCHAR(255),
+
+    status VARCHAR(50) DEFAULT 'Pending',
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- =====================================================
+-- INDEXES (Performance Optimization)
+-- =====================================================
+
+CREATE INDEX IF NOT EXISTS idx_properties_seller 
+ON properties(seller_id);
+
+CREATE INDEX IF NOT EXISTS idx_properties_city 
+ON properties(city);
+
+CREATE INDEX IF NOT EXISTS idx_properties_status 
+ON properties(status);
+
+CREATE INDEX IF NOT EXISTS idx_saved_user 
+ON saved_properties(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_leads_property 
+ON property_leads(property_id);
+
+
+-- =====================================================
+-- AUTO UPDATE TIMESTAMP TRIGGER
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+DROP TRIGGER IF EXISTS trg_update_properties ON properties;
+
+CREATE TRIGGER trg_update_properties
+BEFORE UPDATE ON properties
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+
+-- =====================================================
+-- END OF FILE
+-- =====================================================

@@ -1,0 +1,484 @@
+                    <!-- WIZARD CONTAINER -->
+                    <div class="ap-wizard-container">
+
+                        <!-- Progress Header -->
+                        <div class="ap-progress-header">
+                            <div class="ap-step-indicator" id="apStepIndicator">Step 1 of 8</div>
+                            <div class="ap-progress-track">
+                                <div class="ap-progress-fill" id="apProgressFill"></div>
+                            </div>
+                            <div class="ap-brand-icon">
+                                <i class="fas fa-home" style="color: var(--accent);"></i>
+                            </div>
+                        </div>
+
+                        <!-- Form Start -->
+                        <form id="addPropertyForm" enctype="multipart/form-data" novalidate>
+
+                            <!-- STEP 1: Basic Info -->
+                            <div class="ap-step-content active" data-step="1">
+                                <h3 class="ap-section-title">Basic Information</h3>
+                                <p class="ap-section-subtitle">Let's start with the basics of your property.</p>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Property Title <span class="text-danger">*</span></label>
+                                    <input type="text" name="title" class="ap-input"
+                                        placeholder="e.g. 3 BHK Luxury Apartment in Andheri West" required>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Category <span class="text-danger">*</span></label>
+                                    <div class="ap-radio-group">
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="property_type" value="Apartment" checked>
+                                            <div class="ap-radio-box">
+                                                <i class="fas fa-building"></i>
+                                                <span>Apartment</span>
+                                            </div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="property_type" value="Villa">
+                                            <div class="ap-radio-box">
+                                                <i class="fas fa-home"></i>
+                                                <span>Villa / House</span>
+                                            </div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="property_type" value="Plot">
+                                            <div class="ap-radio-box">
+                                                <i class="fas fa-layer-group"></i>
+                                                <span>Plot / Land</span>
+                                            </div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="property_type" value="Commercial">
+                                            <div class="ap-radio-box">
+                                                <i class="fas fa-store"></i>
+                                                <span>Commercial</span>
+                                            </div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="property_type" value="Office">
+                                            <div class="ap-radio-box">
+                                                <i class="fas fa-briefcase"></i>
+                                                <span>Office Space</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Listing Type <span class="text-danger">*</span></label>
+                                        <div class="ap-radio-group">
+                                            <label class="ap-radio-card">
+                                                <input type="radio" name="listing_type" value="Sale" checked>
+                                                <div class="ap-radio-box">
+                                                    <span>Sale</span>
+                                                </div>
+                                            </label>
+                                            <label class="ap-radio-card">
+                                                <input type="radio" name="listing_type" value="Rent">
+                                                <div class="ap-radio-box">
+                                                    <span>Rent / Lease</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Type <span class="text-danger">*</span></label>
+                                        <div class="ap-radio-group">
+                                            <label class="ap-radio-card">
+                                                <input type="radio" name="category" value="Residential" checked>
+                                                <div class="ap-radio-box">
+                                                    <span>Residential</span>
+                                                </div>
+                                            </label>
+                                            <label class="ap-radio-card">
+                                                <input type="radio" name="category" value="Commercial">
+                                                <div class="ap-radio-box">
+                                                    <span>Commercial</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 2: Location -->
+                            <div class="ap-step-content" data-step="2">
+                                <h3 class="ap-section-title">Location Details</h3>
+                                <p class="ap-section-subtitle">Help buyers find your property easily.</p>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Search Location (Auto-suggest)</label>
+                                    <div class="ap-input-wrapper">
+                                        <input type="text" id="locationSearch" class="ap-input"
+                                            placeholder="Enter area, city, landmark" autocomplete="off">
+
+                                        <button type="button" id="btnSearchLoc" class="btn-ap btn-ap-primary"
+                                            style="position: absolute; right: 5px; top: 5px; padding: 8px 16px;">Search</button>
+                                    </div>
+                                </div>
+
+                                <!-- Map Container -->
+                                <!-- Map Container (OSM via iframe) -->
+                                <div class="ap-form-group">
+                                    <iframe id="mapFrame" class="ap-map-container"
+                                        src="https://www.google.com/maps?q=India&output=embed"
+                                        style="width:100%; height:300px; border:0;"></iframe>
+                                    <div class="ap-map-coords" style="display:flex; gap:10px; margin-top:10px;">
+                                        <input type="text" name="latitude" id="lat" class="ap-input"
+                                            placeholder="Latitude" readonly
+                                            style="background:var(--bg); color:var(--muted);">
+                                        <input type="text" name="longitude" id="lng" class="ap-input"
+                                            placeholder="Longitude" readonly
+                                            style="background:var(--bg); color:var(--muted);">
+                                    </div>
+                                    <div class="text-muted small mt-1">
+                                        Map is for display. Coordinates are fetched automatically.
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">House / Plot No.</label>
+                                        <input type="text" name="house_no" class="ap-input" placeholder="e.g. A-102">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Area / Locality <span
+                                                class="text-danger">*</span></label>
+                                        <div class="ap-input-wrapper">
+                                            <input type="text" name="area" id="area" class="ap-input"
+                                                placeholder="Enter Area name..." required autocomplete="off">
+                                            <div id="areaSuggestions"
+                                                style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--card); border:1px solid var(--border); z-index:10; max-height:200px; overflow-y:auto; border-radius:10px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Address Line 1 <span class="text-danger">*</span></label>
+                                    <input type="text" name="address1" id="address1" class="ap-input"
+                                        placeholder="Street, Sector..." required>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">City</label>
+                                        <input type="text" name="city" id="city" class="ap-input" readonly
+                                            style="background: var(--bg); color: var(--muted);">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">State</label>
+                                        <input type="text" name="state" id="state" class="ap-input" readonly
+                                            style="background: var(--bg); color: var(--muted);">
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Pincode</label>
+                                        <div class="ap-input-wrapper">
+                                            <input type="text" name="pincode" id="pincode" class="ap-input"
+                                                placeholder="Enter pincode (6 digits)" autocomplete="off" maxlength="6"
+                                                pattern="\d*">
+                                            <div id="pincodeSuggestions"
+                                                style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--card); border:1px solid var(--border); z-index:10; max-height:200px; overflow-y:auto; border-radius:10px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Landmark (Optional)</label>
+                                        <div class="input-group">
+                                            <input type="text" name="landmark" class="ap-input" placeholder="Near...">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 3: Property Details -->
+                            <div class="ap-step-content" data-step="3">
+                                <h3 class="ap-section-title">Property Details</h3>
+                                <p class="ap-section-subtitle">Specific features of your property.</p>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Built-up Area (sq.ft) <span
+                                                class="text-danger">*</span></label>
+                                        <input type="number" name="built_up_area" class="ap-input" required min="0">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Carpet Area (sq.ft)</label>
+                                        <input type="number" name="carpet_area" class="ap-input" min="0">
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Floor No.</label>
+                                        <input type="number" name="floor_number" class="ap-input" min="0">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Total Floors</label>
+                                        <input type="number" name="total_floors" class="ap-input" min="0">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Availability Date</label>
+                                        <input type="date" name="availability_date" class="ap-input">
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Furnishing Status</label>
+                                    <div class="ap-radio-group">
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="furnishing_status" value="Fully Furnished">
+                                            <div class="ap-radio-box"><span>Fully Furnished</span></div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="furnishing_status" value="Semi-Furnished" checked>
+                                            <div class="ap-radio-box"><span>Semi-Furnished</span></div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="furnishing_status" value="Unfurnished">
+                                            <div class="ap-radio-box"><span>Unfurnished</span></div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Bedrooms (BHK)</label>
+                                        <input type="number" name="bedrooms" class="ap-input" min="0" max="10">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Bathrooms</label>
+                                        <input type="number" name="bathrooms" class="ap-input" min="0" max="10">
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Balcony</label>
+                                    <div class="ap-radio-group" style="justify-content: flex-start;">
+                                        <label class="ap-radio-card" style="flex: 0 0 100px;">
+                                            <input type="radio" name="balcony" value="true">
+                                            <div class="ap-radio-box"><span>Yes</span></div>
+                                        </label>
+                                        <label class="ap-radio-card" style="flex: 0 0 100px;">
+                                            <input type="radio" name="balcony" value="false" checked>
+                                            <div class="ap-radio-box"><span>No</span></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 4: Pricing -->
+                            <div class="ap-step-content" data-step="4">
+                                <h3 class="ap-section-title">Pricing & Ownership</h3>
+                                <p class="ap-section-subtitle">Be transparent to build trust.</p>
+
+                                <!-- Sell Price Wrapper -->
+                                <div class="ap-form-grid" id="sellPriceWrapper">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Expected Price (₹) <span
+                                                class="text-danger">*</span></label>
+                                        <input type="number" name="expected_price" id="expectedPrice" class="ap-input"
+                                            placeholder="Total Sale Price" min="0">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Token / Booking Amount</label>
+                                        <input type="number" name="token_amount" class="ap-input" min="0">
+                                    </div>
+                                </div>
+
+                                <!-- Rent Price Wrapper -->
+                                <div class="ap-form-grid" id="rentPriceWrapper" style="display:none;">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Rent Amount (₹) <span
+                                                class="text-danger">*</span></label>
+                                        <input type="number" name="rent_amount" id="rentAmount" class="ap-input"
+                                            placeholder="Monthly Rent" min="0">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Security Deposit</label>
+                                        <input type="number" name="security_deposit" class="ap-input" min="0">
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Maintenance (Monthly)</label>
+                                        <input type="number" name="maintenance_charges" class="ap-input" min="0">
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Ownership Type</label>
+                                        <select name="ownership_type" class="ap-input">
+                                            <option value="Freehold">Freehold</option>
+                                            <option value="Leasehold">Leasehold</option>
+                                            <option value="Co-operative Society">Co-operative Society</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Negotiable?</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="is_negotiable"
+                                            id="isNegotiable" checked>
+                                        <label class="form-check-label" for="isNegotiable">Price is Negotiable</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 5: Images & Media -->
+                            <div class="ap-step-content" data-step="5">
+                                <h3 class="ap-section-title">Property Media</h3>
+                                <p class="ap-section-subtitle">High quality images and videos increase leads.</p>
+
+                                <!-- Photos Section -->
+                                <div class="ap-form-group" style="margin-bottom: 30px;">
+                                    <label class="ap-label">Photos (Max 10) <span class="text-danger">*</span></label>
+                                    <label class="ap-upload-zone" for="propImages">
+                                        <input type="file" name="images" id="propImages" multiple accept="image/*"
+                                            style="display: none;">
+                                        <i class="fas fa-camera ap-upload-icon"></i>
+                                        <div style="font-weight: 600;">Upload Photos</div>
+                                        <div style="font-size: 13px; color: var(--muted);">Click or drag and drop images
+                                            here</div>
+                                    </label>
+                                    <div class="ap-preview-grid" id="imagePreviewContainer"></div>
+                                </div>
+
+                                <!-- Video and Floor Plan Grid -->
+                                <div class="ap-form-grid">
+                                    <!-- Video Upload -->
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Video (Optional)</label>
+                                        <label class="ap-upload-zone" for="propVideo"
+                                            style="padding: 30px 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center;">
+                                            <input type="file" name="video" id="propVideo" accept="video/*"
+                                                style="display: none;">
+                                            <i class="fas fa-video ap-upload-icon"
+                                                style="font-size: 32px; margin-bottom: 10px;"></i>
+                                            <div style="font-size: 14px; font-weight: 600;">Upload Video</div>
+                                            <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Click or
+                                                drag and drop</div>
+                                        </label>
+                                        <div id="videoPreview"
+                                            style="margin-top: 12px; font-size: 13px; min-height: 20px;"></div>
+                                    </div>
+
+                                    <!-- Floor Plan Upload -->
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Floor Plan (Optional)</label>
+                                        <label class="ap-upload-zone" for="propFloorPlan"
+                                            style="padding: 30px 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center;">
+                                            <input type="file" name="floor_plan" id="propFloorPlan" accept="image/*"
+                                                style="display: none;">
+                                            <i class="fas fa-ruler-combined ap-upload-icon"
+                                                style="font-size: 32px; margin-bottom: 10px;"></i>
+                                            <div style="font-size: 14px; font-weight: 600;">Upload Floor Plan</div>
+                                            <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">Click or
+                                                drag and drop</div>
+                                        </label>
+                                        <div id="floorPlanPreview" style="margin-top: 12px; min-height: 20px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 6: Seller Details -->
+                            <div class="ap-step-content" data-step="6">
+                                <h3 class="ap-section-title">Seller Details</h3>
+                                <p class="ap-section-subtitle">How should buyers contact you?</p>
+
+                                <div class="ap-form-grid">
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Name</label>
+                                        <input type="text" name="seller_name" class="ap-input"
+                                            value="{{ session.user.full_name }}" required>
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Mobile</label>
+                                        <input type="text" name="seller_mobile" class="ap-input"
+                                            value="{{ session.user.contact_number }}" required>
+                                    </div>
+                                    <div class="ap-form-group">
+                                        <label class="ap-label">Email</label>
+                                        <input type="email" name="seller_email" class="ap-input"
+                                            value="{{ session.user.email }}" required>
+                                    </div>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">You are:</label>
+                                    <div class="ap-radio-group">
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="seller_role" value="Owner" checked>
+                                            <div class="ap-radio-box"><span>Owner</span></div>
+                                        </label>
+                                        <label class="ap-radio-card">
+                                            <input type="radio" name="seller_role" value="Builder">
+                                            <div class="ap-radio-box"><span>Builder</span></div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- STEP 7: Additional & Legal -->
+                            <div class="ap-step-content" data-step="7">
+                                <h3 class="ap-section-title">Final Details</h3>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Property Description</label>
+                                    <textarea name="description" class="ap-input" rows="4"
+                                        placeholder="Describe the key features..."></textarea>
+                                </div>
+
+                                <div class="ap-form-group">
+                                    <label class="ap-label">Highlights (Comma separated)</label>
+                                    <input type="text" name="highlights" class="ap-input"
+                                        placeholder="e.g. Near Metro, Sea View, 24x7 Water">
+                                </div>
+
+                                <hr style="margin: 20px 0; border-color: var(--border);">
+
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="confirmInfo" name="confirm_info"
+                                        required>
+                                    <label class="form-check-label" for="confirmInfo">I confirm that the above
+                                        information is correct and I am the owner/builder of this property.</label>
+                                </div>
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms"
+                                        required>
+                                    <label class="form-check-label" for="agreeTerms">I agree to PropertyPlus Terms &
+                                        Conditions and acknowledge that my property details will be visibly
+                                        public. <a href="/terms-and-conditions" target="_blank" style="color: var(--accent); text-decoration: none; font-weight: 600; margin-left: 5px;">Read More</a></label>
+                                </div>
+                            </div>
+
+                            <!-- STEP 8: Preview -->
+                            <div class="ap-step-content" data-step="8">
+                                <h3 class="ap-section-title">Preview Property</h3>
+                                <p class="ap-section-subtitle">Review your details before final submission.</p>
+
+                                <div id="previewContainer">
+                                    <!-- Dynamic Content populated by JS -->
+                                    <div class="text-center text-muted p-4">Loading preview...</div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Actions -->
+                            <div class="ap-footer">
+                                <button type="button" id="btnPrev" class="btn-ap btn-ap-secondary">Previous</button>
+                                <button type="button" id="btnCancel" class="btn-ap btn-ap-danger">Cancel</button>
+                                <button type="button" id="btnNext" class="btn-ap btn-ap-primary">Next Step</button>
+                                <button type="submit" id="btnSubmit" class="btn-ap btn-ap-primary"
+                                    style="display: none;">Submit Property</button>
+                            </div>
+
+                        </form>
+                    </div>

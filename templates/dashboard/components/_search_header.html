@@ -1,0 +1,95 @@
+<!-- Sticky Search Header -->
+<div class="pp-search-header" id="ppSearchHeader">
+    <div class="pp-search-inner">
+        <div class="pp-search-brand" id="ppSearchBrand">
+            <span class="pp-brand-property">Property</span><span class="pp-brand-plus">Plus</span>
+        </div>
+
+        <div class="pp-search-box-container" style="width: 100%;">
+            <div class="pp-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="ppSearchInput" class="pp-search-input"
+                    placeholder="Search properties…" autocomplete="off"
+                    value="{{ request.args.get('q', '') }}" />
+                <button type="button" id="ppToggleFilterBtn" class="pp-toggle-filter-btn"
+                    style="display: none;">
+                    <i class="fas fa-filter"></i> <span>Filters</span>
+                </button>
+            </div>
+            <div id="ppSuggestionsBox" class="pp-suggestions-box"></div>
+        </div>
+
+        <div class="pp-filter-container">
+            <!-- Location Group -->
+            <div class="pp-filter-group">
+                <i class="fas fa-map-marker-alt text-accent"></i>
+                <span class="pp-filter-label">Location</span>
+                <select class="pp-filter-select" id="filterState">
+                    <option value="All">All States</option>
+                    {% for state in states %}
+                    <option value="{{ state }}" {% if request.args.get('state')==state %}selected{%
+                        endif %}>{{ state }}</option>
+                    {% endfor %}
+                </select>
+                <select class="pp-filter-select" id="filterCity">
+                    <option value="All">All Cities</option>
+                </select>
+            </div>
+
+            <!-- Category & Type Group -->
+            <div class="pp-filter-group">
+                <i class="fas fa-home text-accent"></i>
+                <span class="pp-filter-label">Property</span>
+                <select class="pp-filter-select" id="filterCategory">
+                    <option value="All">Category</option>
+                    <option value="Residential" {% if request.args.get('category')=='Residential'
+                        %}selected{% endif %}>Residential</option>
+                    <option value="Commercial" {% if request.args.get('category')=='Commercial'
+                        %}selected{% endif %}>Commercial</option>
+                </select>
+                <select class="pp-filter-select" id="filterType">
+                    <option value="All">Type</option>
+                    <option value="Villa" {% if request.args.get('property_type')=='Villa'
+                        %}selected{% endif %}>Villa</option>
+                    <option value="Plot" {% if request.args.get('property_type')=='Plot'
+                        %}selected{% endif %}>Plot</option>
+                    <option value="Apartment" {% if request.args.get('property_type')=='Apartment'
+                        %}selected{% endif %}>Apartment</option>
+                    <option value="Office" {% if request.args.get('property_type')=='Office'
+                        %}selected{% endif %}>Office</option>
+                    <option value="Shop" {% if request.args.get('property_type')=='Shop'
+                        %}selected{% endif %}>Shop</option>
+                </select>
+            </div>
+
+            <!-- Rent/Buy Toggle -->
+            <div class="pp-listing-toggle">
+                {% set current_type = request.args.get('type', 'All') %}
+                <input type="hidden" id="filterListingType" value="{{ current_type }}">
+                <button type="button"
+                    class="pp-listing-btn {% if current_type == 'Rent' %}active{% endif %}"
+                    data-value="Rent">Rent</button>
+                <button type="button"
+                    class="pp-listing-btn {% if current_type == 'Sale' or current_type == 'All' %}active{% endif %}"
+                    data-value="Sale">Buy</button>
+            </div>
+
+            <!-- Budget Dropdown -->
+            <div class="pp-filter-group">
+                <i class="fas fa-wallet text-accent"></i>
+                <span class="pp-filter-label">Budget</span>
+                <select class="pp-filter-select" id="filterBudgetSelect">
+                    <option value="All">Any Budget</option>
+                </select>
+            </div>
+
+            <!-- Actions -->
+            <div class="pp-filter-actions">
+                <button type="button" class="pp-apply-btn"
+                    onclick="applyDashboardFilters()">Apply</button>
+                <button type="button" class="pp-reset-btn"
+                    onclick="resetDashboardFilters()">Reset</button>
+            </div>
+        </div>
+    </div>
+</div>

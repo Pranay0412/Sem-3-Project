@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .tc-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 40px;
+        background: var(--card);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 1px solid var(--border);
+    }
+    .tc-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    .tc-header h1 {
+        font-size: 2.5rem;
+        color: var(--text);
+        margin-bottom: 10px;
+    }
+    .tc-header p {
+        color: var(--muted);
+    }
+    .tc-section {
+        margin-bottom: 30px;
+    }
+    .tc-section h2 {
+        font-size: 1.5rem;
+        color: var(--accent);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .tc-section p {
+        line-height: 1.6;
+        color: var(--text);
+        opacity: 0.9;
+    }
+    .tc-list {
+        list-style: none;
+        padding-left: 0;
+    }
+    .tc-list li {
+        margin-bottom: 10px;
+        padding-left: 25px;
+        position: relative;
+    }
+    .tc-list li::before {
+        content: "\f00c";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: var(--accent);
+    }
+    .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: var(--bg);
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+    }
+    .back-btn:hover {
+        background: var(--border);
+        transform: translateX(-5px);
+    }
+</style>
+
+<div class="container">    
+    <div class="tc-container">
+        <div class="tc-header">
+            <h1>Terms & Conditions</h1>
+            <p>Last Updated: February 2026</p>
+        </div>
+
+        <div class="tc-section">
+            <h2><i class="fas fa-info-circle"></i> 1. Introduction</h2>
+            <p>Welcome to PropertyPlus. By listing your property on our platform, you agree to comply with and be bound by the following terms and conditions. Please read them carefully.</p>
+        </div>
+
+        <div class="tc-section">
+            <h2><i class="fas fa-check-circle"></i> 2. Accuracy of Information</h2>
+            <p>As a seller, you are solely responsible for the accuracy of the information provided in your property listing. This includes but is not limited to:</p>
+            <ul class="tc-list">
+                <li>Property dimensions and area measurements.</li>
+                <li>Pricing, maintenance charges, and token amounts.</li>
+                <li>Images, videos, and floor plans.</li>
+                <li>Ownership status and legal document availability.</li>
+            </ul>
+        </div>
+
+        <div class="tc-section">
+            <h2><i class="fas fa-user-shield"></i> 3. User Privacy & Data</h2>
+            <p>By listing a property, you acknowledge that your contact details (Name, Mobile, Email) will be shared with potential buyers who express interest. PropertyPlus does not sell your personal data to third-party advertisers.</p>
+        </div>
+
+        <div class="tc-section">
+            <h2><i class="fas fa-ban"></i> 4. Prohibited Content</h2>
+            <p>Lists containing fraudulent information, misleading photos, or properties you do not have the legal right to sell/rent are strictly prohibited. We reserve the right to remove any listing immediately without notice.</p>
+        </div>
+
+        <div class="tc-section">
+            <h2><i class="fas fa-gavel"></i> 5. Liability Disclaimer</h2>
+            <p>PropertyPlus is a platform connecting buyers and sellers. We do not participate in negotiations or transactions. We are not liable for any financial losses, property disputes, or legal issues arising from connections made on this platform.</p>
+        </div>
+
+        <div class="tc-section">
+            <h2><i class="fas fa-sync"></i> 6. Updates to Terms</h2>
+            <p>We reserve the right to modify these terms at any time. Significant changes will be notified via our platform or email notifications.</p>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px; color: var(--muted); font-size: 0.9rem;">
+            &copy; 2026 PropertyPlus Real Estate Solutions. All rights reserved.
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,519 @@
+<div class="pp-settings-container w-100">
+    <!-- Appearance Section -->
+    <div class="pp-card p-4 border-0 shadow-sm mb-4" style="background: var(--settings-card-bg) !important;">
+        <h5 class="mb-4 fw-bold" style="color: var(--text-main);"><i class="fas fa-palette me-2 text-danger"></i> Appearance</h5>
+        
+        <div class="pp-setting-row">
+            <div class="flex-grow-1">
+                <div class="pp-setting-title">Theme Preference</div>
+                <div class="pp-setting-sub">Switch between light and dark mode for your dashboard.</div>
+            </div>
+            <div class="d-flex align-items-center">
+                <span id="themeStatus" class="me-3 small fw-bold" style="color: var(--text-main); opacity: 1;">Light</span>
+                <label class="pp-switch">
+                    <input type="checkbox" id="themeSwitch">
+                    <span class="pp-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Section -->
+    <div class="pp-card p-4 border-0 shadow-sm mb-4" style="background: var(--settings-card-bg) !important;">
+        <h5 class="mb-4 fw-bold" style="color: var(--text-main);"><i class="fas fa-user-shield me-2 text-danger"></i> Login & Security</h5>
+        
+        <!-- Password Row -->
+        <div class="pp-setting-row border-bottom pb-3 mb-3" style="border-color: var(--border-color) !important;">
+            <div class="flex-grow-1">
+                <div class="pp-setting-title">Account Password</div>
+                <div class="pp-setting-sub">
+                    Last updated: 
+                    <span class="fw-bold" style="color: var(--text-main);">
+                        {% if session.user.last_password_update %}
+                            {{ session.user.last_password_update }}
+                        {% else %}
+                            Never
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <button class="btn btn-danger btn-sm px-4" onclick="initiateChangePassword(this)" style="background-color: var(--button-color); border-color: var(--button-color);">
+                Update Password
+            </button>
+        </div>
+
+        <!-- 2FA Row -->
+        <div class="pp-setting-row">
+            <div class="flex-grow-1">
+                <div class="pp-setting-title">Two-Factor Authentication</div>
+                <small id="disable2faOtpMsg" style="display:none;" class="text-success"></small>
+                <div class="pp-setting-sub">
+                    Security status: 
+                    <span id="2faStatusBadge" class="badge rounded-pill bg-{{ 'success text-white' if session.user.is_2fa_enabled else 'danger' }}">
+                        {{ 'Enabled' if session.user.is_2fa_enabled else 'Disabled' }}
+                    </span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <span id="switch2FAText" class="me-3 small fw-bold" style="color: var(--text-main); opacity: 1;">{{ 'Enabled' if session.user.is_2fa_enabled else 'Disabled' }}</span>
+                <label class="pp-switch">
+                    <input type="checkbox" id="switch2FA" 
+                        {{ 'checked' if session.user.is_2fa_enabled else '' }}
+                        onchange="toggle2FA(this)">
+                    <span class="pp-slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danger Zone Section -->
+    <div class="pp-card p-4 border-0 shadow-sm border-start border-danger border-4" style="background: var(--settings-card-bg) !important;">
+        <h5 class="text-danger mb-4 fw-bold" style="color: var(--button-color) !important;"><i class="fas fa-trash-alt me-2"></i> Account Termination</h5>
+        <div class="pp-setting-row">
+            <div class="flex-grow-1">
+                <div class="pp-setting-title">Delete Account</div>
+                <div class="pp-setting-sub fw-medium" style="color: var(--text-muted);">This will permanently remove all your data and listings.</div>
+            </div>
+            <button class="btn btn-outline-danger btn-sm px-4" onclick="initiateDeleteAccount(this)">
+                Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODALS REUSING OTP STYLE -->
+
+<!-- 1. Password Change Modal -->
+<div class="modal fade" id="pwdOtpModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background: var(--modal-bg) !important;">
+            <div class="modal-header border-0 pb-0 justify-content-center pt-4">
+                <h5 class="modal-title fw-bold" id="pwdModalTitle" style="color: var(--text-main);">Update Password</h5>
+            </div>
+            <div class="modal-body p-4 pt-2">
+                <!-- Step 1: Verification (OTP or Old Password) -->
+                <div id="pwd-step-verify">
+                    <div id="pwd-verify-otp-view" style="display: none;">
+                        <div class="text-center mb-4">
+                            <div class="mb-3">
+                                <i class="fas fa-envelope-open-text fa-3x text-danger opacity-50"></i>
+                            </div>
+                            <p class="text-muted small px-3">We've sent a 6-digit verification code to your email. Enter it below to proceed.</p>
+                        </div>
+                        <div class="otp-wrapper mb-4">
+                            <div class="otp-row d-flex justify-content-center gap-2" role="group">
+                                <input class="otp-digit pwd-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                                <input class="otp-digit pwd-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                                <input class="otp-digit pwd-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                                <input class="otp-digit pwd-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                                <input class="otp-digit pwd-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                                <input class="otp-digit pwd-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                            </div>
+                            <div id="pwdOtpError" class="text-danger small text-center mt-2" style="display: none; font-weight: 600;">Invalid verification code. Please try again.</div>
+                            
+                            <button id="btn-verify-pwd-otp" class="btn btn-danger w-100 mt-4 py-2 fw-bold" onclick="showPwdFormStep()" disabled style="opacity: 0.6; cursor: not-allowed;">Verify OTP</button>
+
+                            <div class="text-center mt-3">
+                                <span id="pwdTimerDisp" class="small text-muted" style="display: none;">Resend in <span id="pwdTimerCount">30</span>s</span>
+                                <a id="pwdResendBtn" href="javascript:void(0)" class="small text-decoration-none text-danger fw-bold" onclick="initiateChangePassword(document.querySelector('.btn-danger'))">Resend Code</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="pwd-verify-old-view" style="display: none;">
+                        <div class="text-center mb-4">
+                            <div class="mb-3">
+                                <i class="fas fa-key fa-3x text-danger opacity-50"></i>
+                            </div>
+                            <p class="text-muted small px-3">Enter your current password to set a new one.</p>
+                        </div>
+                        <div class="floating-group mb-4">
+                            <div class="position-relative">
+                                <input type="password" id="oldPwdInput" class="form-control py-2" placeholder=" ">
+                                <label class="form-label small fw-bold text-muted">CURRENT PASSWORD</label>
+                                <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('oldPwdInput', this)"></i>
+                            </div>
+                            <small id="oldPwdError" class="text-danger fw-bold mt-1" style="display: none;">Incorrect password</small>
+                        </div>
+                        <button class="btn btn-danger w-100 py-2 fw-bold" onclick="verifyOldPasswordAndNext()">Verify & Proceed</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: New Password Form -->
+                <div id="pwd-step-form" style="display: none;">
+                    <div class="floating-group mb-3">
+                        <div class="position-relative">
+                            <input type="password" id="newPwdInput" class="form-control py-2" placeholder=" " style="transition: all 0.3s ease;">
+                            <label class="form-label small fw-bold text-muted">CREATE NEW PASSWORD</label>
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('newPwdInput', this)"></i>
+                        </div>
+                        <small id="pwdOldError" class="text-danger fw-bold mt-1" style="display: none;">Cannot use your previous password</small>
+                    </div>
+
+                    <div id="pwd-criteria" class="mb-3" style="font-size: 12px;">
+                        <span id="pwd-crit-len" class="me-2 text-danger">❌ 8+ Chars</span>
+                        <span id="pwd-crit-num" class="me-2 text-danger">❌ Number</span>
+                        <span id="pwd-crit-spec" class="me-2 text-danger">❌ Special (@#$%)</span>
+                    </div>
+
+                    <div class="floating-group mb-4">
+                        <div class="position-relative">
+                            <input type="password" id="confirmPwdInput" class="form-control py-2" placeholder=" " style="transition: all 0.3s ease;">
+                            <label class="form-label small fw-bold text-muted">CONFIRM NEW PASSWORD</label>
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('confirmPwdInput', this)"></i>
+                        </div>
+                        <small id="pwdMatchError" class="text-danger fw-bold mt-1" style="display: none;">Passwords do not match</small>
+                    </div>
+
+                    <button id="btn-finish-pwd-update" class="btn btn-success w-100 py-2 fw-bold" onclick="verifyAndChangePwd()" disabled style="opacity: 0.6; background-color: #21ce83; border-color: #21ce83;">Update Password</button>
+                </div>
+
+                <!-- Step 3: Success Animation -->
+                <div id="pwd-step-success" style="display: none; text-align: center;">
+                    <div class="success-animation">
+                        <div class="decorations">
+                            <div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div>
+                            <div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div>
+                        </div>
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                    <h3 class="fw-bold mt-4" style="color: var(--text-main);">Password Updated!</h3>
+                    <p class="text-muted small mt-2">Your account security has been updated successfully.<br>Refreshing your dashboard...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2. 2FA Modal -->
+<div class="modal fade" id="twoFaConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background: var(--modal-bg) !important;">
+            <div class="modal-header border-0 pb-0 pt-4">
+                <h5 class="modal-title fw-bold w-100 text-center" style="color: var(--text-main);">Confirm 2FA Update</h5>
+            </div>
+            <div class="modal-body p-4 pt-2">
+                <!-- Step 1: OTP (Only for disabling) -->
+                <div id="twoFaStepOtp" style="display: none;">
+                    <p class="text-center text-muted small mb-4">Enter the 6-digit code sent to your email.</p>
+                    <div class="otp-row d-flex justify-content-center gap-2 mb-3">
+                        <input class="otp-digit otp-digit-2fa" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit otp-digit-2fa" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit otp-digit-2fa" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit otp-digit-2fa" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit otp-digit-2fa" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit otp-digit-2fa" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    </div>
+                    <div id="twoFaOtpError" class="text-danger small text-center mt-2" style="display: none; font-weight: 600;">Invalid code. Please try again.</div>
+                    
+                    <button id="btn-verify-2fa-otp" class="btn btn-danger w-100 mt-4 py-2 fw-bold" onclick="confirm2FAToggleStep1()" disabled style="opacity: 0.6; cursor: not-allowed;">Verify OTP</button>
+
+                    <div class="text-center mt-3">
+                        <span id="twoFaTimerDisp" class="small text-muted" style="display: none;">Resend in <span id="twoFaTimerCount">30</span>s</span>
+                        <a id="twoFaResendBtn" href="javascript:void(0)" class="small text-decoration-none text-danger fw-bold" onclick="initiateDisable2FAOTP()">Resend Code</a>
+                    </div>
+                </div>
+
+                <!-- Step 2: Password -->
+                <div id="twoFaStepPwd" style="display: none;">
+                    <p class="text-center text-muted small mb-4">Security Verification: Please enter your password to confirm.</p>
+                    <div class="floating-group mb-4">
+                        <div class="position-relative">
+                            <input type="password" id="twoFaPwdInput" class="form-control py-2" placeholder=" ">
+                            <label class="form-label small fw-bold text-muted">ACCOUNT PASSWORD</label>
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('twoFaPwdInput', this)"></i>
+                        </div>
+                        <small id="twoFaPwdError" class="text-danger fw-bold mt-1" style="display: none;">Incorrect password</small>
+                    </div>
+                    <button class="btn btn-danger w-100 py-2 fw-bold" onclick="confirm2FAToggle()">Confirm Change</button>
+                </div>
+
+                <!-- Step 3: Success -->
+                <div id="twoFaStepSuccess" style="display: none; text-align: center;">
+                    <div class="success-animation">
+                        <div class="decorations">
+                            <div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div>
+                        </div>
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                    <h3 class="fw-bold mt-4" style="color: var(--text-main);">Security Updated!</h3>
+                    <p class="text-muted small mt-2">Two-factor authentication settings saved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3. Termination Modal -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; background: var(--modal-bg) !important;">
+            <div class="modal-header border-0 pb-0 pt-4">
+                <h5 class="modal-title fw-bold w-100 text-center text-danger">Identity Verification</h5>
+            </div>
+            <div class="modal-body p-4 pt-2">
+                <div class="alert alert-warning border-0 small mb-4 text-center">
+                    <i class="fas fa-exclamation-triangle me-1"></i> Irreversible Action Detected
+                </div>
+                
+                <!-- Step 1: OTP -->
+                <div id="delStepOtp">
+                    <label class="form-label d-block text-center small fw-bold text-muted mb-2">VERIFICATION CODE</label>
+                    <div class="otp-row d-flex justify-content-center gap-2 mb-3">
+                        <input class="otp-digit delete-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit delete-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit delete-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit delete-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit delete-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                        <input class="otp-digit delete-otp-digit" inputmode="numeric" pattern="\d*" maxlength="1" />
+                    </div>
+                    <div id="deleteOtpError" class="text-danger small text-center mt-2" style="display: none; font-weight: 600;">Invalid code. Please try again.</div>
+                    
+                    <button id="btn-verify-del-otp" class="btn btn-danger w-100 mt-4 py-2 fw-bold" onclick="verifyAndDeleteAccountStep1()" disabled style="opacity: 0.6; cursor: not-allowed;">Verify OTP</button>
+
+                    <div class="text-center mt-3">
+                        <span id="delTimerDisp" class="small text-muted" style="display: none;">Resend in <span id="delTimerCount">30</span>s</span>
+                        <a id="delResendBtn" href="javascript:void(0)" class="small text-decoration-none text-danger fw-bold" onclick="initiateDeleteAccount(document.querySelector('.btn-outline-danger'))">Resend Code</a>
+                    </div>
+                </div>
+
+                <!-- Step 2: Password -->
+                <div id="delStepPwd" style="display: none;" class="mt-4">
+                    <div class="floating-group mb-4">
+                        <div class="position-relative">
+                            <input type="password" id="deletePwdInput" class="form-control py-2" placeholder=" ">
+                            <label class="form-label small fw-bold text-muted">ACCOUNT PASSWORD</label>
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility('deletePwdInput', this)"></i>
+                        </div>
+                        <small id="deletePwdError" class="text-danger fw-bold mt-1" style="display: none;">Incorrect password</small>
+                    </div>
+                    <button class="btn btn-danger w-100 py-2 fw-bold" onclick="verifyAndDeleteAccount()">
+                        CONFIRM PERMANENT DELETION
+                    </button>
+                </div>
+
+                <!-- Step 3: Success -->
+                <div id="delStepSuccess" style="display: none; text-align: center;">
+                    <div class="success-animation">
+                        <div class="decorations">
+                            <div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div><div class="dec"></div>
+                        </div>
+                        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                        </svg>
+                    </div>
+                    <h3 class="fw-bold mt-4" style="color: var(--text-main);">Account Deleted</h3>
+                    <p class="text-muted small mt-2">Your account and data have been removed. Redirecting...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* =====================================================
+       THEME COLORS (from: https://coolors.co/f45b69-f6e8ea-22181c-5a0001-f13030)
+       - Light: background vs block differentiated
+       - Dark: background vs block differentiated
+       ===================================================== */
+    :root {
+        --c-blush: #F45B69;
+        --c-rose: #F6E8EA;
+        --c-coffee-bean: #22181C;
+        --c-dark-red: #5A0001;
+        --c-primary-red: #F13030;
+
+        /* Page vs block differentiation */
+        --settings-page-bg: #F6E8EA;          /* soft rose */
+        --settings-card-bg: #FFFFFF;          /* solid white block */
+        --settings-card-border: rgba(34, 24, 28, 0.10);
+
+        /* Modals: solid blocks */
+        --modal-bg: #FFFFFF;
+        --modal-text: #22181C;
+
+        /* Inputs inside popups */
+        --popup-field-bg: #FFFFFF;
+        --popup-field-text: #22181C;
+        --popup-field-border: rgba(34, 24, 28, 0.18);
+
+        /* Backdrop behind modal (keep classic overlay, but themed) */
+        --modal-backdrop-bg: #22181C;
+        --modal-backdrop-opacity: 0.45;
+    }
+
+    [data-theme="dark"] {
+        /* Page vs block differentiation */
+        --settings-page-bg: #1A1316;          /* deeper than coffee bean */
+        --settings-card-bg: var(--c-coffee-bean);
+        --settings-card-border: rgba(246, 232, 234, 0.14);
+
+        /* Modals: solid blocks */
+        --modal-bg: var(--c-coffee-bean);
+        --modal-text: #F6E8EA;
+
+        --popup-field-bg: #1A1316;           /* slightly deeper so fields are visible */
+        --popup-field-text: #F6E8EA;
+        --popup-field-border: rgba(246, 232, 234, 0.20);
+
+        --modal-backdrop-bg: #000000;
+        --modal-backdrop-opacity: 0.55;
+    }
+
+    .pp-settings-container { width: 100%; transition: all 0.3s; background: var(--settings-page-bg) !important; padding: 16px; border-radius: 18px; }
+
+    /* Cards are SOLID blocks per theme */
+    .pp-card { border-radius: 16px; position: relative; overflow: hidden; border: 1px solid var(--settings-card-border) !important; }
+
+    .pp-settings-container .pp-card {
+        background: var(--settings-card-bg) !important;
+    }
+
+    /* Keep classic modal overlay feel (same window), but themed */
+    .modal-backdrop.show {
+        opacity: var(--modal-backdrop-opacity) !important;
+        background-color: var(--modal-backdrop-bg) !important;
+    }
+    
+    /* Reuse OTP style from Auth */
+    .otp-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .otp-digit {
+        width: 100%; aspect-ratio: 1/1; text-align: center; font-size: 20px; font-weight: 800;
+        border: 2px solid var(--popup-field-border); border-radius: 10px;
+        background: var(--popup-field-bg) !important; color: var(--popup-field-text) !important;
+        transition: all 0.2s; outline: none; padding: 0;
+    }
+    .otp-digit:focus { border-color: var(--c-primary-red) !important; box-shadow: 0 4px 12px rgba(241, 48, 48, 0.3); transform: translateY(-1px); }
+    .otp-digit.filled { border-color: var(--c-primary-red); }
+    .otp-digit.is-red { border-color: #ff3333 !important; animation: shakeError 0.4s; }
+    .otp-digit.is-green { border-color: #2dce89 !important; }
+
+    @keyframes shakeError {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    /* Floating Labels (Professional Cutout Style) */
+    .floating-group { position: relative; margin-bottom: 25px; }
+    .floating-group input { 
+        width: 100%; padding: 14px 16px; border-radius: 12px !important; 
+        background: var(--popup-field-bg) !important; border: 2.5px solid var(--popup-field-border); color: var(--popup-field-text) !important;
+        font-size: 15px; font-weight: 600; transition: all 0.3s;
+    }
+    .floating-group input:focus { border-color: var(--c-primary-red) !important; box-shadow: none; outline: none; }
+    
+    .floating-group label { 
+        position: absolute; left: 16px; top: 50%; transform: translateY(-50%); 
+        transition: 0.2s all ease-in-out; pointer-events: none; 
+        color: #888; font-size: 14px; font-weight: 700; z-index: 5;
+        padding: 0 6px; background: transparent;
+    }
+    
+    .floating-group input:focus + label, 
+    .floating-group input:not(:placeholder-shown) + label,
+    .floating-group .position-relative input:focus + label, 
+    .floating-group .position-relative input:not(:placeholder-shown) + label {
+        top: 0; font-size: 12px; color: #F13030 !important;
+        background: var(--popup-field-bg) !important; transform: translateY(-50%);
+    }
+    [data-theme="dark"] .floating-group label { color: rgba(246, 232, 234, 0.78) !important; }
+    
+    .password-toggle { 
+        position: absolute; right: 15px; top: 50%; transform: translateY(-50%); 
+        cursor: pointer; color: #888; z-index: 10; font-size: 14px;
+    }
+
+    /* Modal: SOLID block */
+    .modal-content { 
+        background: var(--modal-bg) !important; color: var(--modal-text) !important; 
+        border-radius: 20px !important; border: none !important; 
+        box-shadow: 0 15px 50px rgba(0,0,0,0.2) !important; 
+    }
+    .modal-body { background: transparent !important; }
+    .modal-header { background: transparent !important; }
+    
+    [data-theme="dark"] .modal-content { box-shadow: 0 15px 50px rgba(0,0,0,0.55) !important; }
+
+    /* Text contrast inside popup */
+    .modal-title,
+    .modal-content h5,
+    .modal-content h4,
+    .modal-content h3 {
+        color: var(--modal-text) !important;
+    }
+
+    .modal-content p.text-muted,
+    .modal-content .text-muted {
+        color: rgba(34, 24, 28, 0.72) !important;
+        opacity: 1;
+    }
+    [data-theme="dark"] .modal-content p.text-muted,
+    [data-theme="dark"] .modal-content .text-muted,
+    [data-theme="dark"] .modal-content .pp-setting-sub {
+        color: rgba(246, 232, 234, 0.78) !important;
+        opacity: 1;
+    }
+
+    .modal-header .btn-close { filter: invert(var(--close-btn-invert, 0)); opacity: 0.85; }
+    [data-theme="dark"] { --close-btn-invert: 1; }
+    
+    .form-control:focus { border-color: var(--c-primary-red); box-shadow: none; }
+
+    /* Ensure visibility for titles and descriptions */
+    .pp-setting-title { color: var(--text-main); font-weight: 600; }
+    .pp-setting-sub { color: var(--text-muted); font-size: 0.85rem; }
+    
+    .pp-setting-row { display: flex; align-items: center; justify-content: space-between; }
+
+    /* Fix badge visibility in dark mode */
+    .badge.bg-danger { background-color: var(--c-primary-red) !important; color: white !important; }
+    .badge.bg-success { background-color: #21ce83 !important; color: white !important; }
+
+    /* Button Hover Effect */
+    .btn { transition: all 0.3s ease; border-radius: 12px; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .btn-danger:hover { background-color: #ff0004 !important; border-color: #ff0004 !important; }
+
+    [data-theme="dark"] .modal-content .text-danger { color: var(--c-primary-red) !important; }
+
+    /* Alerts inside modal readable on coffee-bean */
+    [data-theme="dark"] .modal-content .alert {
+        background: rgba(246, 232, 234, 0.08) !important;
+        color: rgba(246, 232, 234, 0.92) !important;
+    }
+
+    /* Success Checkmark & Burst Keyframes */
+    @keyframes stroke { 100% { stroke-dashoffset: 0; } }
+    @keyframes scale { 0%, 100% { transform: none; } 50% { transform: scale3d(1.1, 1.1, 1); } }
+    @keyframes fill { 100% { box-shadow: inset 0px 0px 0px 50px #2dce89; } }
+    @keyframes confettiBurst {
+        0% { opacity: 0; transform: translate(0, 0) scale(0) rotate(0deg); }
+        30% { opacity: 1; }
+        100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--tr)); }
+    }
+
+    .success-animation { margin: 40px auto; position: relative; width: 140px; height: 140px; }
+    .checkmark { width: 100px; height: 100px; border-radius: 50%; display: block; stroke-width: 2; stroke: #fff; stroke-miterlimit: 10; box-shadow: inset 0px 0px 0px #2dce89; animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both; position: relative; z-index: 5; margin: 0 auto; }
+    .checkmark__circle { stroke-dasharray: 166; stroke-dashoffset: 166; stroke-width: 2; stroke-miterlimit: 10; stroke: #2dce89; fill: none; animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards; }
+    .checkmark__check { transform-origin: 50% 50%; stroke-dasharray: 48; stroke-dashoffset: 48; animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards; }
+    .decorations { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; pointer-events: none; }
+    .dec { position: absolute; width: 6px; height: 12px; opacity: 0; }
+    .dec:nth-child(1) { background: #2dce89; top: 10%; left: 50%; --tx: -20px; --ty: -100px; --tr: 120deg; animation: confettiBurst 1.2s ease-out 0.8s forwards; }
+    .dec:nth-child(2) { background: #ffbc00; top: 30%; right: 10%; --tx: 100px; --ty: -60px; --tr: -150deg; animation: confettiBurst 1.2s ease-out 0.85s forwards; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+    .dec:nth-child(3) { background: #4f7cff; bottom: 20%; left: 20%; --tx: -80px; --ty: 80px; --tr: 200deg; animation: confettiBurst 1.2s ease-out 0.9s forwards; width: 10px; height: 10px; }
+    .dec:nth-child(4) { background: #f43f5e; top: 50%; left: 10%; --tx: -100px; --ty: -20px; --tr: -180deg; animation: confettiBurst 1.2s ease-out 0.82s forwards; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+    .dec:nth-child(5) { background: #22c55e; top: 15%; left: 15%; --tx: -60px; --ty: -70px; --tr: 250deg; animation: confettiBurst 1.2s ease-out 1s forwards; width: 8px; height: 8px; border-radius: 50%; }
+    .dec:nth-child(6) { background: #f59e0b; top: 10%; right: 20%; --tx: 70px; --ty: -90px; --tr: -220deg; animation: confettiBurst 1.2s ease-out 0.88s forwards; width: 12px; height: 6px; }
+    .dec:nth-child(7) { background: #0ea5a4; bottom: 10%; right: 30%; --tx: 50px; --ty: 100px; --tr: 180deg; animation: confettiBurst 1.2s ease-out 0.95s forwards; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+    .dec:nth-child(8) { background: #6d28d9; bottom: 40%; right: -10px; --tx: 110px; --ty: 20px; --tr: -160deg; animation: confettiBurst 1.2s ease-out 0.83s forwards; width: 8px; height: 12px; }
+</style>
+
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>

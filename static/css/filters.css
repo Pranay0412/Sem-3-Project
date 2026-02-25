@@ -1,0 +1,302 @@
+/* static/css/filters.css */
+@import url('variables.css');
+/* Design tokens */
+
+/* =========================================
+   FILTER CONTAINER (Horizontal Scrollbar)
+   ========================================= */
+.pp-filter-container {
+    /* Layout: Single horizontal line */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Very tight spacing */
+    flex-wrap: nowrap;
+    /* Never wrap to next line */
+    overflow-x: auto;
+    /* Scroll horizontally if needed */
+
+    /* Box Styling */
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    /* Minimal rounding, professional look */
+    padding: 8px;
+    margin: 15px auto 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+
+    /* Sizing */
+    width: 100%;
+    max-width: 1200px;
+
+    /* Base Transition Setup */
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: max-height, opacity, margin, transform;
+    transform-origin: top;
+    opacity: 1;
+    max-height: 500px;
+    /* Max height for transition */
+
+    /* Hide Scrollbar */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+/* Hide scrollbar for Chrome/Safari */
+.pp-filter-container::-webkit-scrollbar {
+    display: none;
+}
+
+.pp-filter-container.vanished {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateY(-10px);
+    border: none;
+}
+
+/* =========================================
+   GROUPS (Hidden Wrappers)
+   ========================================= */
+.pp-filter-group {
+    display: contents;
+    /* Remove div from visual layout */
+}
+
+/* HIDE LABELS & ICONS (As requested) */
+.pp-filter-label,
+.pp-filter-group i {
+    display: none !important;
+}
+
+/* =========================================
+   SELECT PILLS (The "Buttons")
+   ========================================= */
+.pp-filter-select {
+    /* Reset */
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+
+    /* Dimensions - Small & Fixed Height */
+    height: 32px;
+    padding: 0 20px 0 10px;
+    /* Right padding for arrow */
+    border-radius: 50px;
+    /* Fully round pills */
+
+    /* Text Truncation Logic */
+    max-width: 90px;
+    /* Force small size */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Shows "..." if text is too long */
+
+    /* Visuals */
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    /* Tiny Arrow Icon */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+
+    /* No Transform Transitions */
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.pp-filter-select:hover {
+    background-color: var(--border);
+    /* Simple grey darken */
+    border-color: var(--muted);
+}
+
+.pp-filter-select:focus {
+    border-color: var(--accent);
+    background-color: var(--card);
+}
+
+/* =========================================
+   RENT/BUY TOGGLE (Compact Segmented)
+   ========================================= */
+.pp-listing-toggle {
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    padding: 2px;
+    border-radius: 50px;
+    border: 1px solid var(--border);
+    height: 32px;
+    flex-shrink: 0;
+    /* Don't shrink */
+    margin-left: auto;
+    /* Push to right side */
+}
+
+.pp-listing-btn {
+    border: none;
+    background: transparent;
+    padding: 0 12px;
+    height: 100%;
+    border-radius: 50px;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pp-listing-btn:hover {
+    color: var(--text);
+}
+
+.pp-listing-btn.active {
+    background: var(--accent);
+    /* Red */
+    color: #fff;
+}
+
+/* =========================================
+   ACTION BUTTONS (Apply/Reset)
+   ========================================= */
+.pp-filter-actions {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.pp-apply-btn,
+.pp-reset-btn {
+    height: 32px;
+    padding: 0 14px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pp-apply-btn {
+    background: var(--accent);
+    /* Use accent color for visibility */
+    color: #fff;
+}
+
+.pp-apply-btn:hover {
+    background: var(--accent2);
+    /* Darker accent on hover */
+}
+
+.pp-reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+}
+
+.pp-reset-btn:hover {
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* =========================================
+   TOGGLE FILTER BTN (Search Bar)
+   ========================================= */
+.pp-toggle-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 8px;
+    height: 32px;
+}
+
+.pp-toggle-filter-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* =========================================
+   RESPONSIVE (Mobile)
+   ========================================= */
+@media (max-width: 768px) {
+    .pp-filter-container {
+        /* CSS Grid for perfect 2-column alignment */
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+
+        /* Layout adjustments */
+        width: 100%;
+        margin: 10px 0;
+        padding: 12px;
+        background: transparent;
+        /* Seamless integration */
+        border: none;
+        box-shadow: none;
+
+        /* Ensure normal overflow behavior */
+        overflow: visible;
+        height: auto;
+    }
+
+    /* All select inputs expand to fill their grid cell */
+    .pp-filter-select {
+        width: 100%;
+        max-width: none;
+        flex: none;
+        height: 38px;
+        /* Slightly taller for touch */
+        font-size: 0.85rem;
+    }
+
+    /* The Rent/Buy toggle */
+    .pp-listing-toggle {
+        width: 100%;
+        margin: 0;
+        height: 38px;
+        justify-content: center;
+        background: var(--card);
+        /* Ensure visibility */
+    }
+
+    /* Action buttons container - Span full width */
+    .pp-filter-actions {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .pp-apply-btn,
+    .pp-reset-btn {
+        flex: 1;
+        height: 38px;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+}

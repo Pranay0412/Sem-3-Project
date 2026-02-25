@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Verification Code</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #F6E8EA; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div style="max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); overflow: hidden; border: 1px solid #E0D4D6;">
+        <!-- Header -->
+        <div style="background-color: #22181C; padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 1px;">
+                Property<span style="color: #F13030;">Plus</span>
+            </h1>
+        </div>
+
+        <!-- Content -->
+        <div style="padding: 40px 30px; text-align: center; color: #333333;">
+            <h2 style="color: #22181C; font-size: 24px; margin-bottom: 10px;">Verify Your Account</h2>
+            <p style="color: #666666; font-size: 16px; line-height: 1.5; margin-bottom: 30px;">
+                Welcome to PropertyPlus! Use the code below to verify your email address and complete your action.
+            </p>
+            
+            <div style="background-color: #FDF2F2; border: 2px dashed #F13030; border-radius: 8px; padding: 20px; display: inline-block; margin-bottom: 30px;">
+                <span style="font-size: 36px; font-weight: 800; color: #22181C; letter-spacing: 5px; font-family: monospace;">
+                    {{ otp }}
+                </span>
+            </div>
+            
+            <p style="font-size: 14px; color: #999999; margin-top: 20px;">
+                This code is valid for 10 minutes. <br>
+                If you didn't request this, please ignore this email.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div style="background-color: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #888888; border-top: 1px solid #eeeeee;">
+            &copy; 2026 PropertyPlus Real Estate. All rights reserved.<br>
+            Need help? Contact support@propertyplus.com
+        </div>
+    </div>
+</body>
+</html>

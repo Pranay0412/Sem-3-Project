@@ -1,0 +1,2271 @@
+/* =========================================
+   NOTIFICATION BADGE
+   ========================================= */
+@import url('variables.css');
+
+/* Design tokens */
+.pp-notify-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6px;
+    box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+    animation: pulse-badge 2s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes pulse-badge {
+
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(244, 63, 94, 0.4);
+    }
+
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(244, 63, 94, 0.6);
+    }
+}
+
+.pp-status-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: rgba(244, 91, 105, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(244, 91, 105, 0.2);
+    margin-top: 5px;
+}
+
+.pp-notify-btn {
+    position: relative;
+}
+
+/* =========================================
+   PROPERTY CARD ACTIONS (HEART ON CARD)
+   ========================================= */
+.pp-card-actions {
+    position: absolute;
+    bottom: 52px;
+    right: 12px;
+    z-index: 5;
+    display: flex;
+    gap: 8px;
+}
+
+.pp-card-action-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: var(--text);
+}
+
+/* Hover effect for Edit/Delete buttons ONLY - Simplified */
+.pp-card-action-btn:not(.pp-heart-btn-card):hover {
+    transform: none;
+    /* No movement */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    /* Subtle shadow only */
+    border-color: var(--text);
+    /* Simple border highlight */
+}
+
+.pp-card-action-btn.edit-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.pp-card-action-btn.delete-btn {
+    color: #f43f5e;
+}
+
+.pp-card-action-btn.delete-btn:hover {
+    background: #f43f5e;
+    color: #f43f5e;
+    /* White text on red bg */
+    border-color: #f43f5e;
+    box-shadow: none;
+    /* Remove red glow */
+}
+
+.pp-card-action-btn i {
+    font-size: 15px;
+}
+
+/* =========================================
+   PROPERTY CARD ACTIONS — RESPONSIVE FIX
+   Fixes icon overlap on small screens (Buyer + Seller)
+   No functionality/logic change
+   ========================================= */
+
+/* Small screens: stack action icons vertically and move to top-right
+   (prevents collision with status capsule + card body in both grid/list) */
+@media (max-width: 576px) {
+    .pp-card-actions {
+        top: 12px;
+        bottom: auto;
+        /* override bottom positioning */
+        right: 12px;
+        left: auto;
+        flex-direction: column;
+        /* stack icons */
+        gap: 6px;
+        align-items: center;
+    }
+
+    .pp-card-action-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .pp-card-action-btn i {
+        font-size: 14px;
+    }
+
+    /* Heart wrapper: reduce visual crowding without changing behavior */
+    .pp-heart-btn-card .like-wrapper {
+        transform: scale(0.92);
+        transform-origin: center;
+    }
+}
+
+/* Modal Seller Actions */
+.pp-modal-actions-seller {
+    display: flex;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.pp-action-btn.pp-delete-btn-modal {
+    background: rgba(244, 63, 94, 0.1);
+    color: #f43f5e;
+    border: 1px solid rgba(244, 63, 94, 0.2);
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+.pp-action-btn.pp-delete-btn-modal:hover {
+    background: #f43f5e;
+    color: #fff;
+    transform: none;
+    /* No movement */
+    box-shadow: none;
+    /* No glow */
+}
+
+/* Fix for Grid View - ensure heart stays above capsule */
+.pp-results[data-view="grid"] .pp-card-actions {
+    bottom: 52px;
+    right: 12px;
+    top: auto;
+}
+
+/* =========================================
+   MODAL Z-INDEX FIX
+   ========================================= */
+.modal {
+    z-index: 2000 !important;
+}
+
+.modal-backdrop {
+    z-index: 1990 !important;
+}
+
+/* =========================================
+   MODAL HEADER INFO - IMPROVED ALIGNMENT
+   ========================================= */
+.pp-modal-header-info {
+    padding: 20px 28px !important;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+
+.pp-modal-title {
+    font-size: 1.75rem !important;
+    letter-spacing: -0.5px;
+    margin: 0 0 12px 0 !important;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.3;
+}
+
+/* Location & Listing Type Row */
+.pp-modal-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.pp-location-badge {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.pp-location-badge i {
+    color: var(--accent);
+    margin-right: 6px;
+    font-size: 0.95rem;
+}
+
+/* Status Capsule in Modal */
+.pp-modal-meta-row .pp-status-capsule {
+    position: relative;
+    padding: 5px 12px;
+    font-size: 0.7rem;
+    box-shadow: none;
+    bottom: auto;
+    right: auto;
+}
+
+/* Price & Save Button Row */
+.pp-price-save-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+.pp-price-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pp-modal-price {
+    font-size: 1.9rem !important;
+    letter-spacing: -1px;
+    font-weight: 800;
+    color: #F13030;
+    line-height: 1;
+}
+
+/* =========================================
+   MODAL LAYOUT - 70/30 SPLIT
+   ========================================= */
+.pp-modal-layout {
+    display: flex;
+    padding: 20px 28px 24px 28px !important;
+    gap: 28px !important;
+}
+
+.pp-modal-main {
+    flex: 0 0 70%;
+    min-width: 0;
+}
+
+.pp-modal-sidebar {
+    flex: 0 0 calc(30% - 28px);
+}
+
+/* =========================================
+   PROPERTY DETAILS SECTIONS - CLEAN TABLE FORMAT
+   ========================================= */
+.pp-details-section {
+    margin-bottom: 20px !important;
+}
+
+.pp-details-section:last-child {
+    margin-bottom: 0 !important;
+}
+
+.pp-section-title {
+    margin: 0 0 12px 0 !important;
+    font-size: 1.1rem !important;
+    letter-spacing: -0.2px;
+    font-weight: 700;
+    color: var(--text);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+}
+
+/* Features Grid - Clean Table-like Format */
+.pp-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 10px !important;
+}
+
+.pp-feature-pill {
+    padding: 12px !important;
+    border-radius: 10px !important;
+    background: var(--bg) !important;
+    border: 1px solid var(--border) !important;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pp-feature-pill:hover {
+    border-color: var(--accent);
+    background: var(--card) !important;
+}
+
+.pp-feature-pill i {
+    font-size: 1.3rem !important;
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.pp-feature-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.pp-feature-info small {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.pp-feature-info strong {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 700;
+}
+
+/* Info Boxes - Clean Table-like Format */
+.pp-info-box {
+    background: var(--bg);
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.pp-info-box p {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text);
+    font-size: 0.95rem;
+}
+
+.pp-address-text {
+    margin: 0;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* =========================================
+   MODAL CLOSE BUTTON - OUTSIDE POPUP
+   ========================================= */
+.pp-modal-actions {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    transform: none;
+    z-index: 2100 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pp-close-btn {
+    width: 42px !important;
+    /* Standard professional button size */
+    height: 42px !important;
+    border-radius: 12px !important;
+    /* Soft square (removes "round effect") */
+    border: 1px solid var(--border);
+    /* Thinner, cleaner border */
+    background: var(--card) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* Faster, simpler transition */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* Subtle, realistic shadow */
+    color: var(--text);
+    font-size: 1.1rem;
+}
+
+.pp-close-btn:hover {
+    transform: translateY(-1px);
+    /* Micro-interaction lift only */
+    background: var(--bg) !important;
+    /* Slight darken on hover */
+    border-color: var(--text);
+    /* Highlight border slightly */
+    color: var(--text);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    /* Clean shadow deepen */
+}
+
+/* For tablets */
+@media (max-width: 992px) {
+    .pp-modal-actions {
+        top: 20px;
+        right: 15px;
+        transform: none;
+    }
+}
+
+/* For smaller devices - stick to top right, no blur */
+@media (max-width: 768px) {
+    .pp-modal-actions {
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        transform: none;
+        backdrop-filter: none !important;
+    }
+
+    .pp-close-btn {
+        width: 44px !important;
+        height: 44px !important;
+        background: var(--card) !important;
+        backdrop-filter: none !important;
+        border: 2px solid var(--border);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+}
+
+@media (max-width: 576px) {
+    .pp-modal-actions {
+        top: 10px;
+        right: 10px;
+    }
+
+    .pp-close-btn {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.1rem;
+    }
+}
+
+/* Map Section */
+.pp-map-wrapper {
+    background: var(--bg);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.pp-map-wrapper iframe {
+    display: block;
+    width: 100%;
+    height: 280px;
+    border: none;
+}
+
+#modalDescription {
+    white-space: pre-line;
+}
+
+/* =========================================
+   SELLER CARD - IMPROVED STYLING
+   ========================================= */
+.pp-seller-card {
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    background: var(--card) !important;
+    border-radius: 20px !important;
+    padding: 24px;
+    position: sticky;
+    top: 20px;
+}
+
+.pp-seller-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pp-seller-avatar {
+    width: 100px !important;
+    height: 100px !important;
+    border-width: 3px !important;
+    margin: 0 auto 12px;
+}
+
+.pp-seller-header h4 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-top: 8px !important;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+.pp-info-item {
+    font-size: 0.95rem !important;
+    padding: 10px 0 !important;
+    font-weight: 500 !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    word-break: break-word;
+}
+
+.pp-info-item i {
+    color: var(--accent) !important;
+    font-size: 1.1rem !important;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+}
+
+/* =========================================
+   PROPERTY CARD REFINEMENT
+   ========================================= */
+.pp-prop-body {
+    padding: 10px 5px 5px !important;
+}
+
+.pp-prop-title {
+    font-size: 1.15rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 4px;
+}
+
+.pp-prop-meta {
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    color: var(--muted) !important;
+}
+
+.pp-prop-price {
+    font-size: 1.1rem !important;
+    color: var(--accent) !important;
+    margin-top: 10px !important;
+    font-weight: 800 !important;
+}
+
+/* =========================================
+   MODAL SCROLLBAR
+   ========================================= */
+.modal-content {
+    max-height: 90vh;
+    overflow-y: auto !important;
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* =========================================
+   MODAL GALLERY ADJUSTMENTS
+   ========================================= */
+.pp-modal-gallery {
+    padding: 10px !important;
+    gap: 8px !important;
+}
+
+.pp-prop-modal-content {
+    border: none !important;
+    background: var(--card) !important;
+}
+
+/* =========================================
+   ADVANCED LIKE BUTTON ANIMATION
+   ========================================= */
+
+/* Core variables moved to variables.css */
+
+/* Base styling for heart buttons */
+.pp-card-action-btn,
+.modal-heart-custom,
+.pp-heart-btn {
+    font-size: 38px;
+    /* Base for em scaling */
+    appearance: none;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    background: var(--card) !important;
+    width: 1em;
+    height: 1em;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    z-index: 2;
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+.modal-heart-custom {
+    font-size: 46px;
+    /* Larger in modal */
+    margin-left: auto !important;
+    background: var(--card) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Shadow Layer */
+.pp-card-action-btn::before,
+.modal-heart-custom::before,
+.pp-heart-btn::before {
+    z-index: -1;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 .1em 0.3em rgba(0, 0, 0, 1);
+    border-radius: inherit;
+    transition: inherit;
+    display: none;
+    /* Hide default shadow if using shadow animation */
+}
+
+/* Press Animations */
+@keyframes depress {
+
+    0%,
+    100% {
+        transform: translateZ(0) scale(1);
+    }
+
+    40% {
+        transform: translateZ(0) scale(0.85) translateY(2px);
+    }
+
+    /* Tactile press down */
+}
+
+@keyframes depress-shadow {
+
+    from,
+    to {
+        transform: none;
+    }
+
+    50% {
+        transform: scale(0.5);
+    }
+}
+
+@keyframes heart-bounce {
+    0% {
+        transform: scale(1);
+    }
+
+    15% {
+        transform: scale(0.7);
+    }
+
+    40% {
+        transform: scale(1.25);
+    }
+
+    65% {
+        transform: scale(0.9);
+    }
+
+    85% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes particles-out {
+    50% {
+        height: .3em;
+    }
+
+    50%,
+    60% {
+        height: .3em;
+        transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(.8em) scale(1);
+    }
+
+    60% {
+        height: .2em;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(1em) scale(0);
+    }
+}
+
+/* Animations Triggered Only on Heart and Particles */
+.pp-card-action-btn:active,
+.modal-heart-custom:active,
+.pp-heart-btn:active,
+.pp-card-action-btn.active,
+.modal-heart-custom.active,
+.pp-heart-btn.active {
+    animation: none !important;
+}
+
+/* Liquid Wrapper & Elements */
+.like-wrapper {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.like-wrapper>* {
+    margin: auto;
+    grid-area: 1 / 1;
+}
+
+.heart {
+    width: .5em;
+    height: .5em;
+    display: block;
+    transform-origin: center 84%;
+    /* Synced with success prototype */
+    z-index: 2;
+    position: relative;
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.heart path {
+    stroke: var(--like-color-heart);
+    stroke-width: 2.5;
+    /* Increased for better visibility as per prototype */
+    fill: transparent;
+    transition: fill var(--like-duration) var(--like-easing);
+}
+
+.particles {
+    width: 1px;
+    height: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: .1em;
+    width: .1em;
+    border-radius: .05em;
+    background-color: var(--color);
+    --percentage: calc(var(--i) / var(--total-particles));
+    --Θ: calc(var(--percentage) * 1turn);
+    transform: translate(-50%, -50%) rotate(var(--Θ)) translateY(0) scaleY(0);
+    transition: transform var(--like-duration) var(--like-easing);
+    will-change: transform;
+}
+
+/* Ripple removed as per user request */
+.ripple {
+    display: none;
+}
+
+/* Animation Triggers */
+.pp-card-action-btn.active .heart,
+.modal-heart-custom.active .heart,
+.pp-heart-btn.active .heart {
+    animation: heart-bounce var(--like-duration) var(--like-easing);
+}
+
+.pp-card-action-btn.active .particle,
+.modal-heart-custom.active .particle,
+.pp-heart-btn.active .particle {
+    animation: particles-out calc(var(--like-duration) * 1.2) var(--like-easing) forwards;
+}
+
+/* Ripple animation removed */
+
+/* Saved State Persistence */
+.pp-card-action-btn.is-saved .heart path,
+.modal-heart-custom.is-saved .heart path,
+.pp-heart-btn.is-saved .heart path {
+    fill: var(--like-color-heart);
+}
+
+.modal-heart-custom.is-saved {
+    background: var(--card) !important;
+    border-color: var(--like-color-heart) !important;
+}
+
+/* Hover effect completely removed for all heart icon variations */
+.pp-card-action-btn.pp-heart-btn-card:hover,
+.modal-heart-custom:hover,
+.pp-heart-btn:hover {
+    transform: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    border-color: var(--border) !important;
+}
+
+.pp-card-action-btn.pp-heart-btn-card:hover .heart,
+.modal-heart-custom:hover .heart,
+.pp-heart-btn:hover .heart {
+    transform: none !important;
+    filter: none !important;
+}
+
+/* =========================================
+   SELLER EDIT BUTTON IN MODAL
+   ========================================= */
+.pp-edit-btn {
+    width: 46px !important;
+    height: 46px !important;
+    background: var(--card) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.pp-edit-btn:hover {
+    transform: none;
+    /* No movement */
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+    color: #fff !important;
+    box-shadow: none !important;
+    /* No glow */
+}
+
+.pp-edit-btn i {
+    font-size: 1.2rem;
+}
+
+/* Modal Heart Button State - Clean Look */
+.pp-heart-btn.is-saved {
+    background: var(--card) !important;
+    border-color: var(--like-color-heart) !important;
+}
+
+.pp-heart-btn.is-saved i {
+    color: var(--like-color-heart) !important;
+}
+
+/* =========================================
+   STYLISH TOAST NOTIFICATIONS
+   ========================================= */
+.pp-toast-container {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    pointer-events: none;
+}
+
+.pp-toast {
+    min-width: 300px;
+    padding: 16px 20px;
+    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    animation: toastIn 0.5s forwards;
+    pointer-events: auto;
+}
+
+@keyframes toastIn {
+    from {
+        opacity: 0;
+        transform: translateX(100px) scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.pp-toast.success {
+    border-left: 4px solid #2dce89;
+}
+
+.pp-toast.error {
+    border-left: 4px solid #f43f5e;
+}
+
+.pp-toast-icon {
+    font-size: 1.3rem;
+}
+
+.pp-toast.success .pp-toast-icon {
+    color: #2dce89;
+}
+
+/* =========================================
+   EDIT PROPERTY SIDEBAR
+   ========================================= */
+.pp-edit-sidebar {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    /* Hidden by default */
+    width: 60%;
+    /* Increased width for premium feel */
+    height: 100vh;
+    background: var(--card);
+    border-left: 1px solid var(--border);
+    z-index: 2500;
+    transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -15px 0 40px rgba(0, 0, 0, 0.15);
+}
+
+.pp-edit-sidebar.active {
+    right: 0;
+}
+
+@media (max-width: 768px) {
+    .pp-edit-sidebar {
+        width: 100% !important;
+    }
+}
+
+.pp-edit-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 2400;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.pp-edit-sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.pp-sidebar-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card);
+}
+
+.pp-sidebar-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+}
+
+.pp-close-btn-sm {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.pp-close-btn-sm:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.pp-sidebar-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+}
+
+/* Accordion Customization */
+.pp-edit-sidebar .accordion-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.pp-edit-sidebar .accordion-button {
+    background: var(--bg);
+    color: var(--text);
+    font-weight: 700;
+    box-shadow: none;
+    padding: 16px 20px;
+}
+
+.pp-edit-sidebar .accordion-button:not(.collapsed) {
+    background: var(--card);
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+}
+
+.pp-edit-sidebar .accordion-button::after {
+    filter: invert(var(--theme-invert, 0));
+}
+
+.pp-edit-sidebar .accordion-body {
+    background: var(--card);
+    padding: 20px;
+}
+
+.pp-sidebar-footer {
+    padding: 20px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 12px;
+    background: var(--card);
+}
+
+.pp-sidebar-footer .btn {
+    flex: 1;
+    padding: 12px;
+    font-weight: 700;
+    border-radius: 10px;
+}
+
+/* Responsive sidebar */
+@media (max-width: 1200px) {
+    .pp-edit-sidebar {
+        width: 60%;
+    }
+}
+
+@media (max-width: 768px) {
+    .pp-edit-sidebar {
+        width: 85%;
+    }
+}
+
+@media (max-width: 576px) {
+    .pp-edit-sidebar {
+        width: 100%;
+    }
+}
+
+/* Theme specifics for dark mode */
+[data-theme="dark"] .pp-edit-sidebar {
+    --theme-invert: 1;
+}
+
+/* Form control focus in sidebar */
+.pp-edit-sidebar .form-control,
+.pp-edit-sidebar .form-select {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.pp-edit-sidebar .form-control:focus,
+.pp-edit-sidebar .form-select:focus {
+    background: var(--card);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(244, 91, 105, 0.15);
+}
+
+.pp-edit-sidebar .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+/* Drag and Drop Zone - Sidebar Edition */
+.pp-edit-upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    background: var(--bg);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.pp-edit-upload-zone:hover,
+.pp-edit-upload-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(244, 91, 105, 0.05);
+}
+
+.pp-edit-upload-zone i {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.pp-edit-upload-zone p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.pp-edit-upload-zone span {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+/* Image Preview Grid */
+.pp-edit-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.pp-edit-preview-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pp-edit-preview-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pp-edit-remove-img {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: rgba(244, 91, 105, 0.9);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+
+/* =========================================
+   FIX HELP TAB BUTTON (Report to Admin)
+   ========================================= */
+#tab-help .btn-primary {
+    transform: none !important;
+    /* Stop movement */
+    animation: none !important;
+    /* Stop pulse animations */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease !important;
+    box-shadow: 0 4px 12px rgba(244, 91, 105, 0.25) !important;
+    /* Static shadow */
+    background-color: var(--accent) !important;
+    border: none !important;
+}
+
+#tab-help .btn-primary:hover {
+    transform: none !important;
+    /* Ensure it stays still on hover */
+    background-color: var(--accent2) !important;
+    /* Simple dark red shift */
+    box-shadow: 0 6px 16px rgba(244, 91, 105, 0.35) !important;
+    /* Slightly deeper shadow */
+}
+
+#tab-help .btn-primary:active {
+    background-color: var(--deep) !important;
+    box-shadow: 0 2px 6px rgba(244, 91, 105, 0.2) !important;
+}
+
+/* Integrated Password Panel */
+.pp-sidebar-password-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 24px;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 10;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.pp-sidebar-password-panel.active {
+    transform: translateY(0);
+}
+
+.pp-sidebar-password-panel .panel-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.pp-sidebar-password-panel h4 {
+    margin: 0;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--text);
+}
+
+.pp-sidebar-password-panel p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.pp-password-input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.pp-password-input-group i:first-child {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+}
+
+.pp-password-toggle {
+    position: absolute;
+    right: 14px !important;
+    left: auto !important;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--muted) !important;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+
+.pp-password-toggle:hover {
+    color: var(--accent) !important;
+}
+
+.pp-password-input-group .form-control {
+    padding-left: 40px !important;
+}
+
+.pp-panel-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.pp-panel-actions .btn {
+    flex: 1;
+    padding: 12px;
+    font-weight: 700;
+    border-radius: 10px;
+}
+
+/* Form Validation Styles in Sidebar */
+.pp-edit-sidebar .form-control.is-invalid {
+    border-color: #f43f5e !important;
+    background-image: none !important;
+    box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1) !important;
+}
+
+.pp-edit-sidebar .invalid-feedback {
+    display: none;
+    font-size: 0.75rem;
+    color: #f43f5e;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+/* Deletion Reason List */
+.pp-reason-list .form-check {
+    padding: 12px 12px 12px 35px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.pp-reason-list .form-check:hover {
+    background: rgba(var(--accent-rgb, 244, 91, 105), 0.05);
+    border-color: var(--accent);
+}
+
+.pp-reason-list .form-check-input:checked+.form-check-label {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* Dark Mode Form Improvements */
+[data-theme="dark"] .form-control::placeholder {
+    color: rgba(246, 232, 234, 0.5) !important;
+    opacity: 1;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: rgba(246, 232, 234, 0.03);
+    color: #F6E8EA;
+    border-color: rgba(246, 232, 234, 0.15);
+}
+
+[data-theme="dark"] .form-label,
+[data-theme="dark"] .form-check-label {
+    color: rgba(246, 232, 234, 0.9);
+    font-weight: 500;
+}
+
+.pp-edit-sidebar .is-invalid+.invalid-feedback {
+    display: block;
+}
+
+.pp-toast.error .pp-toast-icon {
+    color: #f43f5e;
+}
+
+.pp-toast-msg {
+    font-size: 0.95rem;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN - TABLET
+   ========================================= */
+@media (max-width: 992px) {
+    .pp-modal-layout {
+        padding: 24px !important;
+        gap: 24px !important;
+    }
+
+    .pp-modal-main {
+        flex: 0 0 65%;
+    }
+
+    .pp-modal-sidebar {
+        flex: 0 0 calc(35% - 24px);
+    }
+
+    .pp-features-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .pp-modal-layout {
+        flex-direction: column !important;
+        padding: 20px !important;
+        gap: 24px !important;
+    }
+
+    .pp-modal-main,
+    .pp-modal-sidebar {
+        flex: 0 0 100% !important;
+    }
+
+    .pp-seller-card {
+        position: relative;
+        top: 0;
+    }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN - MOBILE
+   ========================================= */
+@media (max-width: 768px) {
+    .pp-modal-header-info {
+        padding: 16px 18px !important;
+    }
+
+    .pp-modal-title {
+        font-size: 1.4rem !important;
+        margin-bottom: 10px !important;
+    }
+
+    .pp-modal-price {
+        font-size: 1.6rem !important;
+    }
+
+    .pp-price-save-row {
+        flex-wrap: wrap;
+    }
+
+    .modal-heart-custom {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    .pp-modal-layout {
+        padding: 16px !important;
+        gap: 18px !important;
+    }
+
+    .pp-details-section {
+        margin-bottom: 16px !important;
+    }
+
+    .pp-section-title {
+        font-size: 1rem !important;
+        margin-bottom: 10px !important;
+    }
+
+    .pp-features-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+        gap: 8px !important;
+    }
+
+    .pp-feature-pill {
+        padding: 10px !important;
+    }
+
+    .pp-modal-gallery {
+        padding: 8px !important;
+        gap: 6px !important;
+    }
+
+    .pp-map-wrapper iframe {
+        height: 240px;
+    }
+}
+
+@media (max-width: 576px) {
+    .pp-modal-header-info {
+        padding: 14px 16px !important;
+    }
+
+    .pp-modal-title {
+        font-size: 1.25rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .pp-modal-price {
+        font-size: 1.5rem !important;
+    }
+
+    .modal-heart-custom {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 35px !important;
+    }
+
+    .pp-modal-layout {
+        padding: 12px !important;
+        gap: 16px !important;
+    }
+
+    .pp-details-section {
+        margin-bottom: 14px !important;
+    }
+
+    .pp-section-title {
+        font-size: 0.95rem !important;
+        margin-bottom: 8px !important;
+    }
+
+    .pp-features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    .pp-feature-pill {
+        padding: 10px 8px !important;
+    }
+
+    .pp-info-box {
+        padding: 12px;
+    }
+
+    .pp-map-wrapper iframe {
+        height: 200px;
+    }
+
+    .pp-toast-container {
+        top: auto;
+        bottom: 20px;
+        right: 16px;
+        left: 16px;
+    }
+
+    .pp-toast {
+        min-width: auto;
+    }
+}
+
+/* Shake Animation for Validation */
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+}
+
+.is-invalid-shake {
+    animation: shake 0.3s ease-in-out;
+    border-color: #f43f5e !important;
+}
+
+/* =========================================
+   REDESIGNED SELLER REQUEST CARDS
+   ========================================= */
+.pp-request-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height: 160px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.pp-request-card:hover {
+    border-color: #F13030;
+    box-shadow: 0 4px 15px rgba(241, 48, 48, 0.08);
+    transform: none;
+}
+
+/* Sidebar column */
+.pp-request-side {
+    flex: 0 0 100px;
+    background: linear-gradient(135deg, var(--bg) 0%, rgba(244, 91, 105, 0.03) 100%);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 12px;
+    gap: 8px;
+}
+
+.pp-request-time {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+
+.pp-request-time i {
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin-bottom: 4px;
+}
+
+.pp-request-time span {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.pp-request-time small {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.pp-request-status-capsule {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pp-request-status-capsule.pending {
+    background: rgba(255, 193, 7, 0.15);
+    color: #ffb300;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+/* Main Content area */
+.pp-request-content {
+    flex: 1;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;
+    gap: 16px;
+}
+
+/* Property Info Row */
+.pp-request-prop-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+.pp-request-prop-info img {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.pp-request-prop-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.pp-prop-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.pp-request-prop-text .pp-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 0;
+}
+
+.pp-request-prop-text .pp-prop-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 0 0 6px 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.pp-prop-location {
+    font-size: 0.9rem;
+    color: var(--muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.pp-prop-location i {
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+
+.pp-prop-type-tag {
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.pp-prop-type-tag.for-sale {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.pp-prop-type-tag.for-rent {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.pp-request-prop-img-placeholder {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+/* Buyer Details Row (One Row) */
+
+.pp-request-buyer-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    flex-wrap: wrap;
+}
+
+.pp-buyer-identity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 180px;
+}
+
+.pp-buyer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+.pp-buyer-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pp-buyer-avatar i {
+    font-size: 1.2rem;
+    color: var(--muted);
+}
+
+.pp-buyer-name {
+    font-weight: 800;
+    color: var(--text);
+    font-size: 1.05rem;
+}
+
+.pp-buyer-contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: var(--bg);
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: all 0.2s ease;
+}
+
+.pp-buyer-contact-item:hover {
+    border-color: var(--border);
+    /* Keep default border */
+    background: var(--bg);
+    /* Keep default background */
+    transform: none;
+    /* Removed transform */
+}
+
+.pp-buyer-contact-item i {
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+/* History Section Accordion Container */
+.pp-buyer-history-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+}
+
+/* History Section Accordion */
+.pp-request-history {
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    width: 100%;
+}
+
+.pp-request-history[open] {
+    padding-bottom: 4px;
+}
+
+.pp-history-label {
+    list-style: none;
+    cursor: pointer;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+    outline: none;
+}
+
+.pp-history-label::-webkit-details-marker {
+    display: none;
+}
+
+.pp-history-label span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pp-history-label i.fas.fa-history {
+    font-size: 0.85rem;
+    color: var(--accent);
+}
+
+.pp-history-label .toggle-icon {
+    font-size: 0.65rem;
+    transition: transform 0.3s ease;
+    opacity: 0.5;
+}
+
+.pp-request-history[open] .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.pp-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    animation: ppSlideDown 0.3s ease-out;
+}
+
+@keyframes ppSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pp-history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    font-size: 0.82rem;
+    border: 1px solid var(--border);
+}
+
+.pp-history-time {
+    color: var(--text);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pp-history-time i {
+    color: var(--muted);
+    font-size: 0.75rem;
+}
+
+.pp-history-status {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(241, 48, 48, 0.1);
+    color: var(--accent);
+}
+
+/* Requests Grid View Styling: Vertical Stacking */
+.pp-results[data-view="grid"] .pp-request-card {
+    flex-direction: column;
+    min-height: auto;
+}
+
+.pp-results[data-view="grid"] .pp-request-side {
+    flex-direction: row;
+    width: 100%;
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: linear-gradient(90deg, var(--bg) 0%, rgba(244, 91, 105, 0.02) 100%);
+}
+
+.pp-results[data-view="grid"] .pp-request-time {
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.pp-results[data-view="grid"] .pp-request-time i {
+    margin-bottom: 0;
+}
+
+.pp-results[data-view="grid"] .pp-request-content {
+    padding: 20px;
+    gap: 14px;
+}
+
+.pp-results[data-view="grid"] .pp-request-prop-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.pp-results[data-view="grid"] .pp-prop-header-row {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pp-results[data-view="grid"] .pp-request-prop-info img,
+.pp-results[data-view="grid"] .pp-request-prop-img-placeholder {
+    width: 100%;
+    height: 180px;
+    border-radius: 12px;
+}
+
+.pp-results[data-view="grid"] .pp-request-buyer-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 14px;
+}
+
+.pp-results[data-view="grid"] .pp-buyer-identity {
+    width: 100%;
+    min-width: auto;
+}
+
+.pp-results[data-view="grid"] .pp-buyer-contact-item {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .pp-request-card {
+        flex-direction: column;
+        min-height: auto;
+        border-radius: 14px;
+    }
+
+    .pp-request-side {
+        flex-direction: row;
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        justify-content: space-between;
+        padding: 12px 18px;
+        background: linear-gradient(90deg, var(--bg) 0%, rgba(244, 91, 105, 0.02) 100%);
+    }
+
+    .pp-request-time {
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .pp-request-time i {
+        margin-bottom: 0;
+        font-size: 1.2rem;
+    }
+
+    .pp-request-time span {
+        font-size: 0.95rem;
+    }
+
+    .pp-request-content {
+        padding: 18px;
+    }
+
+    .pp-request-prop-info {
+        gap: 14px;
+    }
+
+    .pp-prop-header-row {
+        gap: 8px;
+        margin-bottom: 6px;
+    }
+
+    .pp-request-prop-info img,
+    .pp-request-prop-img-placeholder {
+        width: 70px;
+        height: 70px;
+    }
+
+    .pp-request-prop-text .pp-prop-title {
+        font-size: 1.15rem;
+    }
+
+    .pp-request-buyer-row {
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pp-buyer-identity {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .pp-buyer-avatar {
+        width: 45px;
+        height: 45px;
+    }
+
+    .pp-buyer-name {
+        font-size: 1rem;
+    }
+
+    .pp-buyer-contact-item {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 9px 14px;
+    }
+}
+
+[data-theme="dark"] .pp-buyer-contact-item {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* =========================================
+   PROFESSIONAL MINIMAL EMPTY STATE
+   ========================================= */
+.pp-empty-state {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 40px !important;
+    text-align: center;
+    background: transparent;
+    border: none;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 500px;
+    animation: ppEmptyFadeIn 0.8s ease-out;
+}
+
+@keyframes ppEmptyFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pp-empty-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.pp-empty-state i {
+    font-size: 2.5rem;
+    color: rgba(128, 128, 128, 0.4);
+}
+
+.pp-empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgba(128, 128, 128, 0.8);
+    margin: 0 0 8px 0;
+}
+
+.pp-empty-state p {
+    font-size: 0.95rem;
+    color: rgba(128, 128, 128, 0.6);
+    max-width: 300px;
+    line-height: 1.5;
+    margin: 0 auto;
+}
+
+/* Button removed as per request for non-clickable look */
+.pp-empty-btn {
+    display: none !important;
+}
+
+[data-theme="dark"] .pp-empty-state h3 {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .pp-empty-state p {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="dark"] .pp-empty-state i {
+    color: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================
+   DOWNLOAD PDF BUTTONS (Premium Redesign)
+   ========================================= */
+.pp-card-action-btn.download-btn-card,
+.pp-card-action-btn.download-btn {
+    color: #4A90E2;
+    background: rgba(74, 144, 226, 0.08);
+    border: 1px solid rgba(74, 144, 226, 0.15);
+}
+
+.pp-card-action-btn.download-btn-card:hover,
+.pp-card-action-btn.download-btn:hover {
+    background: #4A90E2 !important;
+    border-color: #4A90E2 !important;
+    color: #fff !important;
+    transform: none;
+    /* No movement */
+    box-shadow: none;
+    /* No blue glow */
+}
+
+.pp-action-btn.pp-download-btn-modal:hover {
+    background: #4A90E2;
+    color: #fff;
+    transform: none;
+    /* No movement */
+    box-shadow: none;
+    /* No blue glow */
+    border-color: #4A90E2;
+}
+
+.pp-action-btn.pp-download-btn-modal {
+    background: rgba(74, 144, 226, 0.1);
+    color: #4A90E2;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    width: auto;
+    /* Fit text */
+    height: 42px;
+    padding: 0 20px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pp-action-btn.pp-download-btn-modal i {
+    font-size: 1.1rem;
+}
+
+/* Dark mode adjustments for download buttons */
+[data-theme="dark"] .pp-action-btn.pp-download-btn-modal {
+    background: rgba(74, 144, 226, 0.15);
+    border-color: rgba(74, 144, 226, 0.3);
+}
+
+[data-theme="dark"] .pp-card-action-btn.download-btn-card {
+    background: rgba(74, 144, 226, 0.12);
+}

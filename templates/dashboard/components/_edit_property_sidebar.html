@@ -1,0 +1,431 @@
+<div class="pp-edit-sidebar" id="editPropertySidebar">
+        <div class="pp-sidebar-header">
+            <h3>Edit Property</h3>
+            <button class="pp-close-btn-sm" onclick="closeEditSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="pp-sidebar-body">
+            <form id="editPropertyForm" enctype="multipart/form-data">
+                <input type="hidden" name="property_id" id="edit_property_id">
+                <input type="hidden" name="latitude" id="edit_latitude">
+                <input type="hidden" name="longitude" id="edit_longitude">
+
+                <div class="accordion" id="editAccordion">
+                    <!-- Section 1: Basic Info -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseBasic">
+                                <i class="fas fa-info-circle me-2"></i> Basic Information
+                            </button>
+                        </h2>
+                        <div id="collapseBasic" class="accordion-collapse collapse show"
+                            data-bs-parent="#editAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Property Title *</label>
+                                    <input type="text" name="title" class="form-control" id="edit_title" required>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <label class="form-label">Type</label>
+                                        <select name="category" class="form-select" id="edit_category">
+                                            <option value="Residential">Residential</option>
+                                            <option value="Commercial">Commercial</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Category</label>
+                                        <select name="property_type" class="form-select" id="edit_property_type">
+                                            <option value="Apartment">Apartment</option>
+                                            <option value="Villa">Villa / House</option>
+                                            <option value="Plot">Plot / Land</option>
+                                            <option value="Commercial">Commercial</option>
+                                            <option value="Office">Office Space</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Listing Type</label>
+                                        <select name="listing_type" class="form-select" id="edit_listing_type"
+                                            onchange="toggleEditPriceFields()">
+                                            <option value="Sale">Sale</option>
+                                            <option value="Rent">Rent</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Location -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseLocation">
+                                <i class="fas fa-map-marker-alt me-2"></i> Location Details
+                            </button>
+                        </h2>
+                        <div id="collapseLocation" class="accordion-collapse collapse" data-bs-parent="#editAccordion">
+                            <div class="accordion-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label">House No.</label>
+                                        <input type="text" name="house_no" class="form-control" id="edit_house_no">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Area *</label>
+                                        <div style="position: relative;">
+                                            <input type="text" name="area" class="form-control" id="edit_area" required
+                                                autocomplete="off">
+                                            <div id="editAreaSuggestions"
+                                                style="display:none; position:absolute; top:100%; left:0; right:0; background:var(--card); border:1px solid var(--border); z-index:1000; max-height:200px; overflow-y:auto; border-radius:8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                                            </div>
+                                        </div>
+                                        <div class="invalid-feedback">This field is required</div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Address Line 1 *</label>
+                                    <input type="text" name="address1" class="form-control" id="edit_address1" required>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Landmark</label>
+                                    <input type="text" name="landmark" class="form-control" id="edit_landmark">
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <label class="form-label">City</label>
+                                        <input type="text" name="city" class="form-control" id="edit_city">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">State</label>
+                                        <input type="text" name="state" class="form-control" id="edit_state">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Pincode</label>
+                                        <input type="text" name="pincode" class="form-control" id="edit_pincode">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Features -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFeatures">
+                                <i class="fas fa-bed me-2"></i> Property Features
+                            </button>
+                        </h2>
+                        <div id="collapseFeatures" class="accordion-collapse collapse" data-bs-parent="#editAccordion">
+                            <div class="accordion-body">
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label">Built-up Area (sqft)</label>
+                                        <input type="number" name="built_up_area" class="form-control"
+                                            id="edit_built_up_area" min="0">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Carpet Area</label>
+                                        <input type="number" name="carpet_area" class="form-control"
+                                            id="edit_carpet_area" min="0">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">BHK</label>
+                                        <input type="number" name="bedrooms" class="form-control" id="edit_bedrooms"
+                                            min="0">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Baths</label>
+                                        <input type="number" name="bathrooms" class="form-control" id="edit_bathrooms"
+                                            min="0">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Floor</label>
+                                        <input type="number" name="floor_number" class="form-control"
+                                            id="edit_floor_number" min="0">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label">Total</label>
+                                        <input type="number" name="total_floors" class="form-control"
+                                            id="edit_total_floors" min="0">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                </div>
+                                <div class="row g-2 mt-2">
+                                    <div class="col-4">
+                                        <label class="form-label">Balcony</label>
+                                        <select name="balcony" class="form-select" id="edit_balcony">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Availability</label>
+                                        <input type="date" name="availability_date" class="form-control"
+                                            id="edit_availability_date">
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label">Furnishing</label>
+                                        <select name="furnishing_status" class="form-select"
+                                            id="edit_furnishing_status">
+                                            <option value="Fully Furnished">Fully Furnished</option>
+                                            <option value="Semi-Furnished">Semi-Furnished</option>
+                                            <option value="Unfurnished">Unfurnished</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Pricing -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapsePricing">
+                                <i class="fas fa-tag me-2"></i> Pricing & Legal
+                            </button>
+                        </h2>
+                        <div id="collapsePricing" class="accordion-collapse collapse" data-bs-parent="#editAccordion">
+                            <div class="accordion-body">
+                                <div id="editSellPriceSection">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Expected Price *</label>
+                                            <input type="number" name="expected_price" class="form-control"
+                                                id="edit_expected_price" min="0">
+                                            <div class="invalid-feedback">Price is required for Sale.</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Token Amount</label>
+                                            <input type="number" name="token_amount" class="form-control"
+                                                id="edit_token_amount" min="0">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="editRentPriceSection" style="display:none;">
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Rent Amount *</label>
+                                            <input type="number" name="rent_amount" class="form-control"
+                                                id="edit_rent_amount" min="0">
+                                            <div class="invalid-feedback">Rent amount is required.</div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Security Deposit</label>
+                                            <input type="number" name="security_deposit" class="form-control"
+                                                id="edit_security_deposit" min="0">
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <label class="form-label">Maintenance Charges</label>
+                                    <input type="number" name="maintenance_charges" class="form-control"
+                                        id="edit_maintenance_charges" min="0">
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="mt-2">
+                                    <label class="form-label">Ownership Type</label>
+                                    <select name="ownership_type" class="form-select" id="edit_ownership_type">
+                                        <option value="Freehold">Freehold</option>
+                                        <option value="Leasehold">Leasehold</option>
+                                        <option value="Co-operative Society">Co-operative Society</option>
+                                    </select>
+                                </div>
+                                <div class="form-check form-switch mt-3">
+                                    <input class="form-check-input" type="checkbox" name="is_negotiable"
+                                        id="edit_is_negotiable">
+                                    <label class="form-check-label" style="color: var(--text);">Negotiable</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: Media -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseMedia">
+                                <i class="fas fa-camera me-2"></i> Media & Description
+                            </button>
+                        </h2>
+                        <div id="collapseMedia" class="accordion-collapse collapse" data-bs-parent="#editAccordion">
+                            <div class="accordion-body">
+                                <label class="form-label">Property Photos (Max 10)</label>
+                                <div class="pp-edit-upload-zone" id="editDropZone"
+                                    onclick="document.getElementById('edit_images').click()">
+                                    <i class="fas fa-camera"></i>
+                                    <p>Drag & Drop images here</p>
+                                    <span>or click to browse files</span>
+                                    <input type="file" name="images" id="edit_images" class="d-none" multiple
+                                        accept="image/*">
+                                </div>
+                                <div class="pp-edit-preview-grid" id="editImagePreview"></div>
+                                <!-- Existing media manager (deletion controls) -->
+                                <input type="hidden" name="delete_images" id="edit_delete_images" value="">
+                                <input type="hidden" name="delete_video" id="edit_delete_video" value="0">
+                                <input type="hidden" name="delete_floor_plan" id="edit_delete_floor_plan" value="0">
+
+                                <div class="mt-3" id="editExistingMediaWrap" style="display:none;">
+                                <div class="fw-bold mb-2">Existing Media</div>
+
+                                <!-- Existing photos (click X to mark for deletion) -->
+                                <div id="editExistingImages" class="pp-edit-preview-grid"></div>
+
+                                <!-- Video remove toggle (shown only if video exists) -->
+                                <div class="form-check mt-3" id="editRemoveVideoRow" style="display:none;">
+                                    <input class="form-check-input" type="checkbox" id="edit_remove_video">
+                                    <label class="form-check-label" for="edit_remove_video">
+                                    Remove current video
+                                    </label>
+                                </div>
+
+                                <!-- Floor plan remove toggle (shown only if floor plan exists) -->
+                                <div class="form-check mt-2" id="editRemoveFloorPlanRow" style="display:none;">
+                                    <input class="form-check-input" type="checkbox" id="edit_remove_floor_plan">
+                                    <label class="form-check-label" for="edit_remove_floor_plan">
+                                    Remove current floor plan
+                                    </label>
+                                </div>
+
+                                <div class="text-muted small mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Removing media will delete it from the listing after you confirm update.
+                                </div>
+                                </div>
+
+                                <div class="text-muted small mt-2 mb-3">
+                                    <i class="fas fa-info-circle me-1"></i> Existing photos will be preserved. New ones
+                                    will be added.
+                                </div>
+
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Video (Optional)</label>
+                                        <div class="pp-edit-upload-zone p-3"
+                                            onclick="document.getElementById('edit_video').click()">
+                                            <i class="fas fa-video fa-2x mb-2"></i>
+                                            <p class="small mb-0">Upload Video</p>
+                                            <input type="file" name="video" id="edit_video" class="d-none"
+                                                accept="video/*">
+                                        </div>
+                                        <div id="editVideoPreview" class="text-success small mt-1"></div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Floor Plan (Optional)</label>
+                                        <div class="pp-edit-upload-zone p-3"
+                                            onclick="document.getElementById('edit_floor_plan').click()">
+                                            <i class="fas fa-ruler-combined fa-2x mb-2"></i>
+                                            <p class="small mb-0">Upload Plan</p>
+                                            <input type="file" name="floor_plan" id="edit_floor_plan" class="d-none"
+                                                accept="image/*">
+                                        </div>
+                                        <div id="editFloorPlanPreview" class="text-success small mt-1"></div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Highlights (Comma separated)</label>
+                                    <input type="text" name="highlights" class="form-control" id="edit_highlights"
+                                        placeholder="e.g. Metro, Sea view, Near Park">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description *</label>
+                                    <textarea name="description" class="form-control" id="edit_description" rows="4"
+                                        required></textarea>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: Seller Details -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseSeller">
+                                <i class="fas fa-user-tie me-2"></i> Seller Details
+                            </button>
+                        </h2>
+                        <div id="collapseSeller" class="accordion-collapse collapse" data-bs-parent="#editAccordion">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Name *</label>
+                                    <input type="text" name="seller_name" class="form-control" id="edit_seller_name" required>
+                                    <div class="invalid-feedback">This field is required</div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label">Mobile *</label>
+                                        <input type="text" name="seller_mobile" class="form-control" id="edit_seller_mobile" required>
+                                        <div class="invalid-feedback">This field is required</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Email *</label>
+                                        <input type="email" name="seller_email" class="form-control" id="edit_seller_email" required>
+                                        <div class="invalid-feedback">Valid email required</div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <label class="form-label">You are:</label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="seller_role" id="edit_role_owner" value="Owner">
+                                            <label class="form-check-label" for="edit_role_owner">Owner</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="seller_role" id="edit_role_builder" value="Builder">
+                                            <label class="form-check-label" for="edit_role_builder">Builder</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="pp-sidebar-footer">
+            <button class="btn btn-secondary" onclick="closeEditSidebar()">Cancel</button>
+            <button class="btn btn-primary" id="btnShowPass" onclick="togglePassPanel(true)">Save Changes</button>
+        </div>
+
+        <!-- INTEGRATED PASSWORD PANEL (ONLY FOR UPDATE) -->
+        <div class="pp-sidebar-password-panel" id="sidebarPassPanel">
+            <div class="panel-header">
+                <h4>Confirm Identity</h4>
+                <p>Enter your password to authorize updates</p>
+            </div>
+            <div class="pp-password-input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="sidebar_confirm_password" class="form-control"
+                    placeholder="Your account password" style="color: var(--text);">
+                <i class="fas fa-eye pp-password-toggle"
+                    onclick="togglePasswordVisibility('sidebar_confirm_password', this)"></i>
+            </div>
+            <div class="pp-panel-actions">
+                <button class="btn btn-secondary" onclick="togglePassPanel(false)">Back</button>
+                <button class="btn btn-primary" id="btnFinalUpdate" onclick="submitEditProperty()">Confirm &
+                    Update</button>
+            </div>
+        </div>
+    </div>
+    
