@@ -6,6 +6,9 @@ class Config:
     All global settings like security, database, and email are defined here.
     """
 
+    from dotenv import load_dotenv
+    load_dotenv()  # Load environment variables from .env file
+
     # ------------------------------------------------------------------
     # Application Security
     # ------------------------------------------------------------------
@@ -22,7 +25,7 @@ class Config:
     DB_HOST = "localhost"
     DB_NAME = "propertyplus_db"
     DB_USER = "postgres"
-    DB_PASS = "pg_pass"   # Change this according to your PostgreSQL password
+    DB_PASS = "admin"   # Change this according to your PostgreSQL password
 
     # ------------------------------------------------------------------
     # Email Configuration (Used for OTP verification)
@@ -34,5 +37,5 @@ class Config:
     MAIL_USE_TLS = True
 
     # Email account used to send OTPs
-    MAIL_USERNAME = "mail_id"              # Sender email
-    MAIL_PASSWORD = "app_pass"             # App password
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")          # Sender email
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")          # App password
